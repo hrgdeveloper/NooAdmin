@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+ android:id="@+id/coordinate_login"
+    tools:context="com.developer.hrg.nooadmin.LoginActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:theme="@style/ThemeOverlay.AppCompat.Light"
+        >
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:id="@+id/toolbar"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark"
+            ></android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:padding="@dimen/_20sdp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_height="match_parent">
+
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:id="@+id/ti_username"
+          android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="نام کاربری"
+                android:drawableRight="@drawable/username"
+                android:id="@+id/et_username"
+            />
+      </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_below="@+id/ti_username"
+        android:id="@+id/ti_password"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="رمز عبور"
+            android:drawableRight="@drawable/password"
+      android:inputType="textPassword"
+            android:id="@+id/et_password"
+            />
+    </android.support.design.widget.TextInputLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ti_password"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="@drawable/btn_one"
+        android:textColor="@android:color/white"
+        android:text="ورود"
+        android:id="@+id/btn_login"
+        android:layout_centerHorizontal="true"
+        />
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
