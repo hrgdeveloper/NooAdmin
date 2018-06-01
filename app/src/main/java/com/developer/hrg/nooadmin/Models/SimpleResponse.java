@@ -3,6 +3,8 @@ package com.developer.hrg.nooadmin.Models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 /**
  * Created by hamid on 5/25/2018.
  */
@@ -14,6 +16,16 @@ public class SimpleResponse {
     String message ;
     @SerializedName("admin")
     Admin admin;
+    @SerializedName("user_list")
+    ArrayList<User> user_list ;
+
+    public ArrayList<User> getUser_list() {
+        return user_list;
+    }
+
+    public void setUser_list(ArrayList<User> user_list) {
+        this.user_list = user_list;
+    }
 
     public Admin getAdmin() {
         return admin;
