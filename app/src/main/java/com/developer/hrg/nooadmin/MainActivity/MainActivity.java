@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.developer.hrg.nooadmin.Fragments.Fragment_userManage.Fragment_UserManage;
 import com.developer.hrg.nooadmin.Helper.AdminInfo;
 import com.developer.hrg.nooadmin.Helper.InternetCheck;
+import com.developer.hrg.nooadmin.Models.Admin;
 import com.developer.hrg.nooadmin.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -53,6 +54,9 @@ AdminInfo adminInfo ;
             }
         });
 
+    }
+    public Admin getAdmin() {
+        return  adminInfo.getAdmin();
     }
 
     @Override
@@ -106,4 +110,5 @@ AdminInfo adminInfo ;
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

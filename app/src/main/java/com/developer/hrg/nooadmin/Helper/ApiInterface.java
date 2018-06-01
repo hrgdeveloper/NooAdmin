@@ -21,6 +21,8 @@ public interface ApiInterface {
     @GET("getUsers")
     Call<SimpleResponse> getUsers(@Header("AuthorizationMyAd") String header);
 
-
+    @FormUrlEncoded
+    @POST("changeUserActive")
+    Call<SimpleResponse> updateUserActive(@Header("AuthorizationMyAd") String header , @Field("status") int status ,@Field("user_id") int user_id );
 
 }

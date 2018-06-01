@@ -7,14 +7,45 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class User {
-    @SerializedName("id")
+    @SerializedName("user_id")
     int id;
     @SerializedName("mobile")
+
     String mobile;
     @SerializedName("apikey")
     String apikey;
     @SerializedName("created_at")
     String created_at;
+
+    @SerializedName("username")
+    String username;
+
+    @SerializedName("status")
+    int status ;
+
+    @SerializedName("active")
+    int active;
+
+
+    public User(int id, String mobile, String apikey, String created_at, String username, int status, int active) {
+        this.id = id;
+        this.mobile = mobile;
+        this.apikey = apikey;
+        this.created_at = created_at;
+        this.username = username;
+        this.status = status;
+        this.active = active;
+    }
+
+
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public int getStatus() {
         return status;
@@ -32,11 +63,7 @@ public class User {
         this.active = active;
     }
 
-    @SerializedName("status")
 
-    int status ;
-    @SerializedName("active")
-    int active;
 
     public int getId() {
         return id;
@@ -70,12 +97,5 @@ public class User {
         this.created_at = created_at;
     }
 
-    public User(int id, String mobile, String apikey, String created_at, int status, int active) {
-        this.id = id;
-        this.mobile = mobile;
-        this.apikey = apikey;
-        this.created_at = created_at;
-        this.status = status;
-        this.active = active;
-    }
+
 }

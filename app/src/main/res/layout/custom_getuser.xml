@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+ <RelativeLayout
+     android:layout_width="match_parent"
+     android:padding="@dimen/_5sdp"
+     android:layout_height="match_parent">
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentRight="true"
+       android:text="شماره تماس : 09357273422"
+       android:id="@+id/tv_user_number"
+       />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_user_number"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_alignParentRight="true"
+        android:text="شماره کاربر : 22"
+        android:id="@+id/tv_user_id"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_user_id"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_alignParentRight="true"
+        android:text="نام کاربری : تکمیل نشده"
+        android:id="@+id/tv_user_username"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tv_user_username"
+        android:text="وضعیت تکمیل ثبت نام : "
+        android:id="@+id/tv_user_label_compelete"
+        />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_user_username"
+        android:id="@+id/iv_user_compelete"
+        android:src="@drawable/tick"
+        android:layout_toLeftOf="@+id/tv_user_label_compelete"
+        android:layout_marginRight="@dimen/_10sdp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tv_user_label_compelete"
+        android:text="وضعیت فعالیت"
+        android:id="@+id/tv_user_lable_active"
+        />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_user_label_compelete"
+        android:src="@drawable/close"
+        android:id="@+id/iv_user_active"
+        android:layout_toLeftOf="@+id/tv_user_lable_active"
+        android:layout_marginRight="@dimen/_10sdp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="97-2-24"
+        android:id="@+id/tv_user_date"
+        android:layout_below="@+id/tv_user_lable_active"
+        />
+
+ </RelativeLayout>
+</android.support.v7.widget.CardView>
