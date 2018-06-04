@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,7 @@ import com.developer.hrg.nooadmin.Helper.Client;
 import com.developer.hrg.nooadmin.Helper.ImageCompression;
 import com.developer.hrg.nooadmin.Helper.InternetCheck;
 import com.developer.hrg.nooadmin.Helper.MyAlert;
+import com.developer.hrg.nooadmin.Helper.MyProgress;
 import com.developer.hrg.nooadmin.Models.Admin;
 import com.developer.hrg.nooadmin.Models.SimpleResponse;
 import com.developer.hrg.nooadmin.R;
@@ -126,15 +128,17 @@ public class Fragment_makeChanel extends Fragment implements View.OnClickListene
             }else if (!InternetCheck.isOnline(getActivity())) {
                 Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
             }else {
+                MyProgress.showProgress(getActivity(),"در حال ساخت کانال");
                 JSONObject jsonobject = new JSONObject();
                 try {
                     jsonobject.put("name",name);
                     jsonobject.put("description",desc);
+                    jsonobject.put("admin_id",admin.getAdmin_id());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 RequestBody req_details = RequestBody.create(MediaType.parse("text/plain"),jsonobject.toString());
-                RequestBody req_pic = RequestBody.create(MediaType.parse("image/*") , picFile);
+                RequestBody req_pic = RequestBody.create(MediaType.parse("image/jpeg") , picFile);
                 MultipartBody.Part part = MultipartBody.Part.createFormData("pic",picFile.getName(),req_pic);
                 ApiInterface api = Client.getClient().create(ApiInterface.class);
                 Call<SimpleResponse> call = api.mChanel(admin.getApikey(),part,req_details);
@@ -143,6 +147,7 @@ public class Fragment_makeChanel extends Fragment implements View.OnClickListene
                     public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                         if (!response.isSuccessful()) {
                             try {
+                                MyProgress.cancelProgress();
                                 JSONObject jsonobject = new JSONObject(response.errorBody().string());
                                 String message = jsonobject.getString("message");
                                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
@@ -156,9 +161,11 @@ public class Fragment_makeChanel extends Fragment implements View.OnClickListene
                             boolean error = response.body().isError();
                             String message = response.body().getMessage();
                             if (!error) {
+                                MyProgress.cancelProgress();
                                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                                 getFragmentManager().popBackStack();
                             }else {
+                                MyProgress.cancelProgress();
                                 Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -166,7 +173,8 @@ public class Fragment_makeChanel extends Fragment implements View.OnClickListene
 
                     @Override
                     public void onFailure(Call<SimpleResponse> call, Throwable t) {
-
+                        MyProgress.cancelProgress();
+                        Toast.makeText(getActivity(), t.getMessage().toString(), Toast.LENGTH_SHORT).show();
                         MyAlert.showAlert(getActivity(),"خطا"," خطای "+ "\n" + t.getMessage().toString() + "\n"+ "لطفا دوباره تلاش کنید");
 
                     }

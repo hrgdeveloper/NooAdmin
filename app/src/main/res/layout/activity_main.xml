@@ -36,12 +36,12 @@
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/rootLayout"
-        tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="8dp">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -74,6 +74,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="2dp"
                     android:layout_weight="1"
+
                     android:background="@android:color/holo_blue_bright"
                     android:foreground="?attr/selectableItemBackground"
                     android:text="@string/chanels_manage"
@@ -116,8 +117,6 @@
 
 
     </FrameLayout>
-
-
 
 
 </android.support.design.widget.CoordinatorLayout>

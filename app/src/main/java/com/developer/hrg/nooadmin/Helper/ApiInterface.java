@@ -32,9 +32,11 @@ public interface ApiInterface {
     Call<SimpleResponse> updateUserActive(@Header("AuthorizationMyAd") String header , @Path("user_id") int user_id , @Field("status") int status);
 
     @Multipart
-    @POST("makeChanel}")
+    @POST("makeChanel")
     Call<SimpleResponse> mChanel(@Header("AuthorizationMyAd") String header ,@Part MultipartBody.Part pic , @Part("details")RequestBody details);
 
 
+    @GET("getAllChanels")
+    Call<SimpleResponse> getAllChanels(@Header("AuthorizationMyAd") String header);
 
 }

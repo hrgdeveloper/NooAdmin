@@ -19,6 +19,18 @@ public class SimpleResponse {
     @SerializedName("user_list")
     ArrayList<User> user_list ;
 
+    public ArrayList<Chanel> getChanels() {
+        return chanels;
+    }
+
+    public void setChanels(ArrayList<Chanel> chanels) {
+        this.chanels = chanels;
+    }
+
+    @SerializedName("chanels")
+    ArrayList<Chanel> chanels ;
+
+
     public ArrayList<User> getUser_list() {
         return user_list;
     }

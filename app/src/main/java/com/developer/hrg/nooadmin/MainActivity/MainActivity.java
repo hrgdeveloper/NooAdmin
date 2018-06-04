@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.developer.hrg.nooadmin.Fragments.Fragment_userManage.getChanels.Fragment_getAllChanels;
 import com.developer.hrg.nooadmin.Fragments.Fragment_userManage.makeChanel.Fragment_makeChanel;
 import com.developer.hrg.nooadmin.Fragments.Fragment_userManage.userManage.Fragment_UserManage;
 import com.developer.hrg.nooadmin.Helper.AdminInfo;
@@ -21,7 +22,7 @@ import com.developer.hrg.nooadmin.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 AdminInfo adminInfo ;
-    Button btn_getUsers , btn_mNewChanel;
+    Button btn_getUsers , btn_mNewChanel , btn_manageChanels;
     FragmentManager fragmentManager ;
     Toolbar toolbar ;
     TextView tv_toolbar ;
@@ -34,6 +35,7 @@ AdminInfo adminInfo ;
         findViews();
         btn_getUsers.setOnClickListener(this);
         btn_mNewChanel.setOnClickListener(this);
+        btn_manageChanels.setOnClickListener(this);
 
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
@@ -73,6 +75,8 @@ AdminInfo adminInfo ;
 
         }else if (view==btn_mNewChanel) {
             openFragment(new Fragment_makeChanel(),"mChanel" , true);
+        }else if (view==btn_manageChanels) {
+            openFragment(new Fragment_getAllChanels(),"manageChanels", false);
         }
 
     }
@@ -84,6 +88,7 @@ AdminInfo adminInfo ;
         tv_toolbar=(TextView)toolbar.findViewById(R.id.tv_toolbar);
         btn_getUsers=(Button)findViewById(R.id.btn_GetUsers);
         btn_mNewChanel=(Button)findViewById(R.id.btn_newChanel);
+        btn_manageChanels=(Button)findViewById(R.id.btn_manageChanels);
     }
 
     @Override
