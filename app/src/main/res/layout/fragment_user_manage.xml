@@ -5,7 +5,7 @@
     android:clickable="true"
 
     android:background="@android:color/white"
-    tools:context="com.developer.hrg.nooadmin.Fragments.Fragment_userManage.Fragment_UserManage">
+    tools:context="com.developer.hrg.nooadmin.Fragments.Fragment_userManage.userManage.Fragment_UserManage">
 
 <android.support.v7.widget.RecyclerView
     android:layout_width="match_parent"

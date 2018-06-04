@@ -8,7 +8,7 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark">
+        app:theme="@style/ThemeOverlay.AppCompat.Light">
 
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
@@ -89,14 +89,14 @@
                 android:weightSum="2">
 
                 <Button
-                    android:id="@+id/btn_socialList"
+                    android:id="@+id/btn_newChanel"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:background="@android:color/holo_green_light"
                     android:foreground="?attr/selectableItemBackground"
-                    android:text="تست"
+                    android:text="ساخت کانال جدید"
                     android:textColor="@android:color/white"
                     android:textSize="20sp" />
 
