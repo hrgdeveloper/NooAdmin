@@ -1,0 +1,40 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="2dp"
+    android:background="@android:color/white"
+    android:clickable="true"
+    tools:context="com.developer.hrg.nooadmin.message_fragments.Simple_fragment">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/et_send_message_simple"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minLines="4"
+        android:padding="5dp"
+
+        android:background="@null"
+        android:gravity="right"
+        android:hint="متن مورد نظر " />
+    </android.support.v4.widget.NestedScrollView>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="ارسال پیام"
+        android:textColor="@android:color/white"
+        android:id="@+id/btn_send_message_simple"
+        android:background="@android:color/holo_blue_light"
+        android:layout_gravity="bottom"
+        />
+
+
+</RelativeLayout>

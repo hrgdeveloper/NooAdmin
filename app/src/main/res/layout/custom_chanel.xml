@@ -6,9 +6,10 @@
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="@dimen/_70sdp"
-        android:layout_height="@dimen/_70sdp"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
         android:layout_alignParentRight="true"
+
         android:layout_marginTop="@dimen/_8sdp"
         android:id="@+id/iv_custom_chanel_photo"
         android:layout_marginRight="@dimen/_8sdp"
@@ -28,6 +29,19 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="آخرین پیام "
+        android:singleLine="true"
+        android:id="@+id/tv_custom_chanel_last"
+        android:maxLines="1"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_below="@id/tv_custom_chanel_name"
+        android:layout_toLeftOf="@+id/iv_custom_chanel_photo"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="mohamad"
         android:id="@+id/tv_custom_chanel_admin"
         android:layout_marginLeft="@dimen/_5sdp"
@@ -40,10 +54,9 @@
         android:layout_height="wrap_content"
         android:text="2018:22:12 12:42"
         android:id="@+id/tv_custom_chanel_date"
-        android:layout_marginBottom="@dimen/_5sdp"
         android:layout_marginLeft="@dimen/_5sdp"
-          android:layout_above="@+id/test"
-       />
+        android:layout_below="@+id/tv_custom_chanel_last"
+        android:layout_alignStart="@+id/tv_custom_chanel_admin" />
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -55,7 +68,7 @@
        android:background="@android:color/black"
        android:layout_marginLeft="@dimen/_15sdp"
        android:layout_marginTop="@dimen/_4sdp"
-       android:layout_below="@+id/iv_custom_chanel_photo"
+       android:layout_below="@+id/tv_custom_chanel_date"
      />
 
 </RelativeLayout>

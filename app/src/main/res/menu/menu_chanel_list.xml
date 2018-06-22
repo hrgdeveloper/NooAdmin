@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+xmlns:app="http://schemas.android.com/apk/lib-auto"
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layoutDirection="rtl"
+android:gravity="end"
+android:layout_gravity="end"
+
+
+    >
+<item android:title="پیام جدید"
+    android:id="@+id/menu_new_message">
+
+    <menu
+        android:layoutDirection="rtl"
+        android:gravity="end"
+        android:layout_gravity="end"
+        >
+        <item android:title="ارسال پیام ساده"
+            android:id="@+id/menu_message_simple"/>
+        <item android:title="ارسال پیام عکس دار "
+            android:id="@+id/menu_message_pic"
+            />
+        <item android:title="ارسال گیف"
+            android:id="@+id/menu_message_gif"/>
+    </menu>
+</item>
+<item android:title="ویرایش مشخصات کانال"
+    android:id="@+id/menu_update_chanel"
+    />
+<item android:title="اضافه کردن عکس کانال"
+    android:id="@+id/menu_newpic"/>
+
+</menu>

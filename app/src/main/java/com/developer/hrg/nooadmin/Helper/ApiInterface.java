@@ -5,6 +5,7 @@ import com.developer.hrg.nooadmin.Models.SimpleResponse;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -38,5 +39,9 @@ public interface ApiInterface {
 
     @GET("getAllChanels")
     Call<SimpleResponse> getAllChanels(@Header("AuthorizationMyAd") String header);
+
+    @Multipart
+    @POST("chanels/{id}/message")
+    Call<SimpleResponse> makeSimpleMessage(@Header("AuthorizationMyAd") String header,@Path("id") int chanel_id, @Part("content") RequestBody content);
 
 }

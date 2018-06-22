@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +23,7 @@ import com.developer.hrg.nooadmin.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 AdminInfo adminInfo ;
-    Button btn_getUsers , btn_mNewChanel , btn_manageChanels;
+    RelativeLayout rt_getUsers , rt_mNewChanel , rt_manageChanels;
     FragmentManager fragmentManager ;
     Toolbar toolbar ;
     TextView tv_toolbar ;
@@ -33,9 +34,9 @@ AdminInfo adminInfo ;
         setContentView(R.layout.activity_main);
         adminInfo=new AdminInfo(MainActivity.this);
         findViews();
-        btn_getUsers.setOnClickListener(this);
-        btn_mNewChanel.setOnClickListener(this);
-        btn_manageChanels.setOnClickListener(this);
+        rt_getUsers.setOnClickListener(this);
+        rt_mNewChanel.setOnClickListener(this);
+        rt_manageChanels.setOnClickListener(this);
 
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
@@ -66,18 +67,25 @@ AdminInfo adminInfo ;
 
     @Override
     public void onClick(View view) {
-        if(view==btn_getUsers) {
+        if(view==rt_getUsers) {
             if (!InternetCheck.isOnline(MainActivity.this)) {
                 Toast.makeText(MainActivity.this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
             }else {
                 openFragment(new Fragment_UserManage(),"userManage", false);
             }
 
-        }else if (view==btn_mNewChanel) {
+        }else if (view==rt_mNewChanel) {
             openFragment(new Fragment_makeChanel(),"mChanel" , true);
-        }else if (view==btn_manageChanels) {
-            openFragment(new Fragment_getAllChanels(),"manageChanels", false);
-        }
+        }else if (view==rt_manageChanels) {
+            if (!InternetCheck.isOnline(MainActivity.this)) {
+                Toast.makeText(MainActivity.this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+            }else {
+                openFragment(new Fragment_getAllChanels(),"manageChanels", false);
+            }
+
+            }
+
+
 
     }
 
@@ -86,9 +94,9 @@ AdminInfo adminInfo ;
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
         tv_toolbar=(TextView)toolbar.findViewById(R.id.tv_toolbar);
-        btn_getUsers=(Button)findViewById(R.id.btn_GetUsers);
-        btn_mNewChanel=(Button)findViewById(R.id.btn_newChanel);
-        btn_manageChanels=(Button)findViewById(R.id.btn_manageChanels);
+        rt_getUsers=(RelativeLayout) findViewById(R.id.rt_GetUsers);
+        rt_mNewChanel=(RelativeLayout) findViewById(R.id.rt_newChanel);
+        rt_manageChanels=(RelativeLayout) findViewById(R.id.rt_manageChanels);
     }
 
     @Override
