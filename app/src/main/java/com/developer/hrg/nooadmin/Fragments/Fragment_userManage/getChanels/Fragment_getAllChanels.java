@@ -18,10 +18,12 @@ import android.widget.Toast;
 import com.developer.hrg.nooadmin.Helper.AdminInfo;
 import com.developer.hrg.nooadmin.Helper.ApiInterface;
 import com.developer.hrg.nooadmin.Helper.Client;
+import com.developer.hrg.nooadmin.Helper.MyAlert;
 import com.developer.hrg.nooadmin.MainActivity.MainActivity;
 import com.developer.hrg.nooadmin.Models.Chanel;
 import com.developer.hrg.nooadmin.Models.SimpleResponse;
 import com.developer.hrg.nooadmin.R;
+import com.developer.hrg.nooadmin.message_fragments.PictureFragment;
 import com.developer.hrg.nooadmin.message_fragments.Simple_fragment;
 
 import java.io.IOException;
@@ -92,6 +94,7 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
 
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                MyAlert.showAlert(getActivity(),"خطای",t.getMessage().toString());
             }
         });
 
@@ -101,6 +104,7 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
     public void onResume() {
         super.onResume();
         ((MainActivity)getActivity()).setToolbarText("مدیریت کانال ها");
+
     }
 
     @Override
@@ -113,7 +117,11 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                     if (item.getItemId()==R.id.menu_message_simple) {
-                      openFragment(Simple_fragment.getInstance(chanels.get(position)));
+                      openFragment(Simple_fragment.getInstance(chanels.get(position)),false);
+                    }else if (item.getItemId()==R.id.menu_message_pic) {
+
+                        openFragment(PictureFragment.getInstance(chanels.get(position)),true);
+
                     }
 
                 return false;
@@ -130,12 +138,16 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
 
     }
 
-  public void  openFragment( Fragment fragment) {
+  public void  openFragment( Fragment fragment , boolean container_full) {
       FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-      fragmentTransaction.add(R.id.rootLayout, fragment);
+      if (container_full) {
+          fragmentTransaction.add(R.id.container_full, fragment);
+      }else {
+          fragmentTransaction.add(R.id.rootLayout, fragment);
+      }
+
       fragmentTransaction.addToBackStack(null);
       fragmentTransaction.commit();
       ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
     }
 }

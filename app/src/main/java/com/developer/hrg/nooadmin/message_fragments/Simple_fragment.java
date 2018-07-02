@@ -52,6 +52,8 @@ public class Simple_fragment extends Fragment implements View.OnClickListener {
     Admin admin ;
     AdminInfo adminInfo ;
 
+
+
     public static Simple_fragment getInstance (Chanel chanel) {
         Simple_fragment simple_fragment = new Simple_fragment();
         Bundle bundle = new Bundle();

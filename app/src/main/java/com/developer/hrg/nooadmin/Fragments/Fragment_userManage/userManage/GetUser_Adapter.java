@@ -43,6 +43,8 @@ public class GetUser_Adapter extends RecyclerView.Adapter<GetUser_Adapter.Holder
     @Override
     public void onBindViewHolder(Holder holder, int position) {
         User user = userList.get(position);
+
+        holder.tv_count.setText(""+Integer.valueOf(position+1));
         holder.tv_mobile.setText("شماره تماس : "+user.getMobile());
         holder.tv_user_id.setText("شماره کاربری :"+user.getId());
         holder.tv_date.setText(user.getCreated_at());
@@ -73,10 +75,11 @@ public class GetUser_Adapter extends RecyclerView.Adapter<GetUser_Adapter.Holder
     }
 
     public class Holder extends RecyclerView.ViewHolder {
-        TextView tv_mobile,tv_user_id , tv_username , tv_date ;
+        TextView tv_mobile,tv_user_id , tv_username , tv_date , tv_count ;
         ImageView iv_complete , iv_active ;
         public Holder(View itemView) {
             super(itemView);
+            tv_count=(TextView)itemView.findViewById(R.id.tv_user_count);
             tv_mobile=(TextView)itemView.findViewById(R.id.tv_user_number);
             tv_user_id=(TextView)itemView.findViewById(R.id.tv_user_id);
             tv_username=(TextView)itemView.findViewById(R.id.tv_user_username);

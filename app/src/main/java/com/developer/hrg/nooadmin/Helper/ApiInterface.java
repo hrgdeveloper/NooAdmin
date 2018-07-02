@@ -1,5 +1,7 @@
 package com.developer.hrg.nooadmin.Helper;
 
+import android.support.annotation.Nullable;
+
 import com.developer.hrg.nooadmin.Models.SimpleResponse;
 
 import okhttp3.MultipartBody;
@@ -42,6 +44,15 @@ public interface ApiInterface {
 
     @Multipart
     @POST("chanels/{id}/message")
-    Call<SimpleResponse> makeSimpleMessage(@Header("AuthorizationMyAd") String header,@Path("id") int chanel_id, @Part("content") RequestBody content);
+    Call<SimpleResponse> makeSimpleMessage(@Header("AuthorizationMyAd") String header,@Path("id") int chanel_id, @Part("content") RequestBody content
+
+    );
+
+
+    @Multipart
+    @POST("chanels/{id}/message")
+    Call<SimpleResponse> makePictureMessage(@Header("AuthorizationMyAd") String header,@Path("id") int chanel_id, @Part("content") RequestBody content
+            , @Part MultipartBody.Part file
+    );
 
 }
