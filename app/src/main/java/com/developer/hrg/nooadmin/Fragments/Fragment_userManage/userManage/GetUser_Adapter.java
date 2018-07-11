@@ -48,7 +48,7 @@ public class GetUser_Adapter extends RecyclerView.Adapter<GetUser_Adapter.Holder
         holder.tv_mobile.setText("شماره تماس : "+user.getMobile());
         holder.tv_user_id.setText("شماره کاربری :"+user.getId());
         holder.tv_date.setText(user.getCreated_at());
-        if (user.getUsername().equalsIgnoreCase("n")) {
+        if (user.getUsername().equalsIgnoreCase("e")) {
             holder.tv_username.setText("نام کاربری : تکمیل نشده است");
         }else {
             holder.tv_username.setText("نام کاربری : "+ user.getUsername());

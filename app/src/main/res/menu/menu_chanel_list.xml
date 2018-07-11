@@ -21,8 +21,13 @@ android:layout_gravity="end"
         <item android:title="ارسال پیام عکس دار "
             android:id="@+id/menu_message_pic"
             />
-        <item android:title="ارسال گیف"
-            android:id="@+id/menu_message_gif"/>
+
+        <item android:title="ارسال فیلم"
+            android:id="@+id/menu_message_movie"/>
+        <item android:title="ارسال صوت"
+            android:id="@+id/menu_message_audio"/>
+        <item android:title="ارسال فایل"
+            android:id="@+id/menu_message_file"/>
     </menu>
 </item>
 <item android:title="ویرایش مشخصات کانال"

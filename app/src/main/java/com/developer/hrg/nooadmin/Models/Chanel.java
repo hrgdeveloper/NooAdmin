@@ -30,7 +30,16 @@ public class Chanel implements Parcelable {
     @SerializedName("type")
     Integer type ;
 
+    @SerializedName("cm_count")
+    int cm_count ;
 
+    public int getCm_count() {
+        return cm_count;
+    }
+
+    public void setCm_count(int cm_count) {
+        this.cm_count = cm_count;
+    }
 
     public String getLast_message() {
         return last_message;

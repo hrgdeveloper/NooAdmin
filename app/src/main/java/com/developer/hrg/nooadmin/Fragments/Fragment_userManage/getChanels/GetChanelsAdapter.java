@@ -29,6 +29,7 @@ public class GetChanelsAdapter extends RecyclerView.Adapter<GetChanelsAdapter.Ho
  public interface MyClickListener{
      public void chanel_clicked(int position, View view) ;
      public void chanel_long_clicked(int position, View view) ;
+     public void comment_clicked(int position, View view);
  }
 
  public void setMyClickListener(MyClickListener myClickListener) {
@@ -50,6 +51,7 @@ public class GetChanelsAdapter extends RecyclerView.Adapter<GetChanelsAdapter.Ho
         holder.tv_name.setText(chanel.getName());
         holder.tv_admin_name.setText(chanel.getUsername());
         holder.tv_date.setText(chanel.getUpdated_at());
+        holder.tv_cm_count.setText(chanel.getCm_count()+"");
         // inja 3 ta halat dare ya ham maseeage khalie ham type ke yani hanooz payami vase kanal ersal nashode
         // ya message khalie ke yani ye file bedone matn ersal shode
         // ya matn dashte akharan message ke matno neshon midim
@@ -71,11 +73,12 @@ public class GetChanelsAdapter extends RecyclerView.Adapter<GetChanelsAdapter.Ho
     }
 
     public class Holder extends RecyclerView.ViewHolder {
-        TextView tv_name,tv_date , tv_admin_name , tv_last  ;
+        TextView tv_name,tv_date , tv_admin_name , tv_last , tv_cm_count  ;
         ImageView iv_profile  ;
         public Holder(View itemView) {
             super(itemView);
             tv_name=(TextView)itemView.findViewById(R.id.tv_custom_chanel_name);
+            tv_cm_count=(TextView)itemView.findViewById(R.id.tv_custom_chanel_cm_count);
             tv_date=(TextView)itemView.findViewById(R.id.tv_custom_chanel_date);
             tv_admin_name=(TextView)itemView.findViewById(R.id.tv_custom_chanel_admin);
             iv_profile=(ImageView)itemView.findViewById(R.id.iv_custom_chanel_photo);
@@ -92,6 +95,12 @@ public class GetChanelsAdapter extends RecyclerView.Adapter<GetChanelsAdapter.Ho
 
                     myClickListener.chanel_long_clicked(getAdapterPosition(),view);
                     return true;
+                }
+            });
+            tv_cm_count.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    myClickListener.comment_clicked(getAdapterPosition(),view);
                 }
             });
 

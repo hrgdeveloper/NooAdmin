@@ -1,5 +1,8 @@
 package com.developer.hrg.nooadmin.Helper;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -15,6 +18,7 @@ public class Client {
     private static Retrofit retrofit =null ;
     public static Retrofit getClient() {
         if (retrofit==null) {
+            Gson gson = new GsonBuilder().setLenient().create();
             final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.MINUTES)
@@ -24,7 +28,7 @@ public class Client {
                     .baseUrl(Config.OFFLINE_URL)
                     .client(okHttpClient)
                     .addConverterFactory(ScalarsConverterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
 
 

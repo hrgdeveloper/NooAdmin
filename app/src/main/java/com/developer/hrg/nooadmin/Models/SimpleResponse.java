@@ -19,6 +19,17 @@ public class SimpleResponse {
     @SerializedName("user_list")
     ArrayList<User> user_list ;
 
+    @SerializedName("comments")
+    ArrayList<Comment> comments ;
+
+    public ArrayList<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(ArrayList<Comment> comments) {
+        this.comments = comments;
+    }
+
     public ArrayList<Chanel> getChanels() {
         return chanels;
     }

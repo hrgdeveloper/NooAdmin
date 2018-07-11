@@ -55,4 +55,13 @@ public interface ApiInterface {
             , @Part MultipartBody.Part file
     );
 
+
+    @GET("getAllComments/{chanel_id}")
+    Call<SimpleResponse> getAllComments(@Header("AuthorizationMyAd") String header,@Path("chanel_id") int chanel_id
+    );
+
+    @FormUrlEncoded
+    @PUT("setCommentState/{comment_id}")
+    Call<SimpleResponse> setCommentState(@Header("AuthorizationMyAd") String header , @Path("comment_id") int user_id , @Field("state") int status);
+
 }

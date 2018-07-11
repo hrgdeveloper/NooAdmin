@@ -134,7 +134,7 @@ public class PictureFragment extends Fragment implements View.OnClickListener,Pr
     @Override
     public void onClick(View view) {
         if (view==tv_gallery) {
-            if (Build.VERSION.SDK_INT>23) {
+            if (Build.VERSION.SDK_INT>=23) {
                 requestPremission(Manifest.permission.WRITE_EXTERNAL_STORAGE,GALLERY_REQUEST);
             }else {
                 Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -265,10 +265,13 @@ public class PictureFragment extends Fragment implements View.OnClickListener,Pr
 
             Uri selectedImage = data.getData();
             String    realPath=getRealPathFromURI(getActivity(),selectedImage);
+
             String filePath = imageCompression.compressImage(realPath);
+
             file = new File(filePath);
             iv_pic.setImageURI(Uri.parse(filePath));
-            frameLayout.setBackgroundColor(ContextCompat.getColor(getActivity(),android.R.color.black));
+
+//            frameLayout.setBackgroundColor(ContextCompat.getColor(getActivity(),android.R.color.black));
 
         }
     }

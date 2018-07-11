@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.developer.hrg.nooadmin.Fragments.Fragment_userManage.comment.CommentFragment;
 import com.developer.hrg.nooadmin.Helper.AdminInfo;
 import com.developer.hrg.nooadmin.Helper.ApiInterface;
 import com.developer.hrg.nooadmin.Helper.Client;
@@ -134,11 +135,17 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
 
     @Override
     public void chanel_long_clicked(final int position, View view) {
-
+        Toast.makeText(getActivity(), chanels.get(position).getCm_count()+" ", Toast.LENGTH_SHORT).show();
 
     }
 
-  public void  openFragment( Fragment fragment , boolean container_full) {
+    @Override
+    public void comment_clicked(int position, View view) {
+        openFragment(CommentFragment.getInstance(Integer.valueOf(chanels.get(position).getChanel_id()),chanels.get(position).getName()),false);
+
+    }
+
+    public void  openFragment( Fragment fragment , boolean container_full) {
       FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
       if (container_full) {
           fragmentTransaction.add(R.id.container_full, fragment);

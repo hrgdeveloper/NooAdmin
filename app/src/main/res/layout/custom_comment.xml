@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="@dimen/_1sdp"
+    card_view:cardElevation="@dimen/_1sdp"
+    android:layout_marginTop="@dimen/_3sdp"
+    >
+
+
+       <RelativeLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+       <de.hdodenhof.circleimageview.CircleImageView
+           android:layout_width="@dimen/_45sdp"
+           android:layout_marginTop="@dimen/_5sdp"
+           android:layout_marginBottom="@dimen/_5sdp"
+           android:layout_height="@dimen/_45sdp"
+           android:id="@+id/iv_custom_comment_pic"
+           android:layout_alignParentEnd="true"
+           />
+
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="12:42"
+           android:id="@+id/tv_custom_comment_time"
+           android:layout_margin="@dimen/_5sdp"
+           />
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_toLeftOf="@+id/iv_custom_comment_pic"
+           android:id="@+id/tv_custom_comment_username"
+           android:layout_marginRight="@dimen/_3sdp"
+           android:layout_marginTop="@dimen/_5sdp"
+           android:text="حمید رضا"
+           />
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:id="@+id/tv_custom_comment_text"
+           android:layout_toLeftOf="@+id/iv_custom_comment_pic"
+           android:layout_below="@+id/tv_custom_comment_username"
+           android:layout_marginRight="@dimen/_3sdp"
+           android:layout_marginTop="@dimen/_5sdp"
+           android:text="بسیار زیبا"
+           />
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_above="@+id/view_fake"
+              android:text="نمایش نظر"
+              android:id="@+id/tv_custom_comment_active"
+
+
+              android:textStyle="bold"
+              android:layout_marginLeft="@dimen/_5sdp"
+              />
+          <View
+              android:layout_width="match_parent"
+              android:layout_height="1dp"
+              android:layout_below="@+id/iv_custom_comment_pic"
+              android:id="@+id/view_fake"
+
+              android:layout_marginTop="@dimen/_6sdp"
+              />
+
+       </RelativeLayout>
+
+</android.support.v7.widget.CardView>

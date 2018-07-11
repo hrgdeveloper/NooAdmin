@@ -57,6 +57,22 @@
         android:layout_marginLeft="@dimen/_5sdp"
         android:layout_below="@+id/tv_custom_chanel_last"
         android:layout_alignStart="@+id/tv_custom_chanel_admin" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+
+        android:gravity="center"
+        android:id="@+id/tv_custom_chanel_cm_count"
+        android:textStyle="bold"
+        android:drawableRight="@drawable/comment"
+        android:layout_marginLeft="@dimen/_5sdp"
+
+        android:layout_alignBaseline="@+id/tv_custom_chanel_admin"
+        android:layout_alignBottom="@+id/tv_custom_chanel_admin"
+        android:layout_toEndOf="@+id/tv_custom_chanel_admin"
+        android:layout_marginStart="33dp" />
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
