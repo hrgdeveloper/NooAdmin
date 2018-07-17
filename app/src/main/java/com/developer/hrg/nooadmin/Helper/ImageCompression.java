@@ -160,9 +160,8 @@ public class ImageCompression extends AsyncTask<String, Void, String> {
 
     public String getFilename() {
         File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
-                + "/didesevomm/"
-                + context.getApplicationContext().getPackageName()
-                + "/Files/Compressed");
+                + "/noor/"
+                + "/Files/Compressed/thumbs");
 
         // Create the storage directory if it does not exist
         if (! mediaStorageDir.exists()){

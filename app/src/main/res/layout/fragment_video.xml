@@ -1,0 +1,128 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@android:color/white"
+    android:clickable="true"
+    android:id="@+id/coordinate_video_fragment"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.developer.hrg.nooadmin.message_fragments.PictureFragment">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:theme="@style/ThemeOverlay.AppCompat.Light">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:id="@+id/toolbar_picture"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark"
+
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="انتخاب ویدیو"
+                    android:id="@+id/tv_videoFragment_gallery"
+                    android:textStyle="bold"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:drawableLeft="@android:drawable/ic_menu_camera"
+                    android:gravity="center"
+                    android:drawableTint="@android:color/white"
+                    />
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="ارسال"
+                    android:layout_toStartOf="@+id/tv_videoFragment_gallery"
+                    android:id="@+id/tv_videoFragment_send"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:drawableStart="@drawable/tick"
+                    android:gravity="center"
+                    android:drawableTint="@android:color/white"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0%"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_VideoFragment_percent"
+                    android:textColor="@android:color/white"
+                    />
+            </RelativeLayout>
+
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+
+
+        <FrameLayout
+            android:id="@+id/framelayout_fragment_video"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/_5sdp">
+
+
+
+            <ImageView
+                android:id="@+id/iv_picVideo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+            </ImageView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tv_bg"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:layout_margin="@dimen/_5sdp"
+                android:id="@+id/tv_time"
+                android:textColor="@android:color/black"/>
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progress_video"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                />
+        </FrameLayout>
+
+
+        <EditText
+            android:id="@+id/et_VideoFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#88000000"
+            android:gravity="right"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:hint="متن پیام"
+            android:minLines="2" />
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

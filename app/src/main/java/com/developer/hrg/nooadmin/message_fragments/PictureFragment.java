@@ -163,9 +163,9 @@ public class PictureFragment extends Fragment implements View.OnClickListener,Pr
 
                 }
 
+                String extension = getFileExtension(file);
                 RequestBody req_content = RequestBody.create(MediaType.parse("text/plain"),jsonObject.toString());
-
-                ProgressRequestBody progress_file = new ProgressRequestBody(file,this,"image/jpeg");
+                ProgressRequestBody progress_file = new ProgressRequestBody(file,this,"image/"+extension);
                 MultipartBody.Part file_part = MultipartBody.Part.createFormData("file",file.getName(),progress_file);
                 ApiInterface api = Client.getClient().create(ApiInterface.class);
                 Call<SimpleResponse> call = api.makePictureMessage(admin.getApikey(),Integer.valueOf(chanel.getChanel_id()) ,req_content,file_part);
@@ -179,6 +179,7 @@ public class PictureFragment extends Fragment implements View.OnClickListener,Pr
 //                                  Log.e("toerror",response.raw().message());
 //                                Log.e("toerror",response.errorBody().string());
 
+                              MyAlert.showAlert(getActivity(),"title",response.errorBody().string());
                                 JSONObject jsonobjectt = new JSONObject(response.errorBody().string());
 
                            //     Log.e("toerror",jsonObject.toString());
@@ -188,6 +189,7 @@ public class PictureFragment extends Fragment implements View.OnClickListener,Pr
 
 
                             } catch (JSONException e) {
+
                                 e.printStackTrace();
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -221,6 +223,15 @@ public class PictureFragment extends Fragment implements View.OnClickListener,Pr
             }
         }
 
+    }
+
+    private String getFileExtension(File file) {
+        String name = file.getName();
+        try {
+            return name.substring(name.lastIndexOf(".") + 1);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     @Override

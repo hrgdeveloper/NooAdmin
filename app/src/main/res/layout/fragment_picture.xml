@@ -79,7 +79,11 @@
             android:id="@+id/framelayout_fragment_pic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/_5sdp">
+            android:layout_marginBottom="@dimen/_5sdp"
+            >
+
+
+                />
 
             <ImageView
                 android:id="@+id/iv_picFragment"
@@ -97,10 +101,10 @@
             android:layout_alignParentBottom="true"
             android:background="#88000000"
             android:gravity="right"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"
             android:hint="متن پیام"
-            android:minLines="2" />
+            android:minLines="2"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
 
     </RelativeLayout>
 

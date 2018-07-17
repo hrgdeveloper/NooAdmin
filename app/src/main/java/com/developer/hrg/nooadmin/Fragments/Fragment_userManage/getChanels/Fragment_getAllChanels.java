@@ -26,6 +26,7 @@ import com.developer.hrg.nooadmin.Models.SimpleResponse;
 import com.developer.hrg.nooadmin.R;
 import com.developer.hrg.nooadmin.message_fragments.PictureFragment;
 import com.developer.hrg.nooadmin.message_fragments.Simple_fragment;
+import com.developer.hrg.nooadmin.message_fragments.VideoFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -123,6 +124,8 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
 
                         openFragment(PictureFragment.getInstance(chanels.get(position)),true);
 
+                    }else if (item.getItemId()==R.id.menu_message_movie) {
+                        openFragment(VideoFragment.getInstance(chanels.get(position)),true);
                     }
 
                 return false;
