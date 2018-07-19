@@ -50,10 +50,9 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.github.bumptech.glide:glide:4.3.0'
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
- //   compile 'com.iceteck.silicompressorr:silicompressor:2.1'
+    //   compile 'com.iceteck.silicompressorr:silicompressor:2.1'
 
     compile 'com.yovenny.VideoCompress:videocompress:1.0.0'
 
     testCompile 'junit:junit:4.12'
-
 }
