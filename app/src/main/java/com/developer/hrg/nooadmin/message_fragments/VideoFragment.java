@@ -43,6 +43,7 @@ import com.developer.hrg.nooadmin.Helper.InternetCheck;
 import com.developer.hrg.nooadmin.Helper.MyAlert;
 import com.developer.hrg.nooadmin.Helper.MySnack;
 import com.developer.hrg.nooadmin.Helper.ProgressRequestBody;
+import com.developer.hrg.nooadmin.Helper.RealPathUtil;
 import com.developer.hrg.nooadmin.MainActivity.MainActivity;
 import com.developer.hrg.nooadmin.Models.Admin;
 import com.developer.hrg.nooadmin.Models.Chanel;
@@ -292,9 +293,11 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
     @Override
     public void onDestroy() {
         super.onDestroy();
+       if (videoFile!=null && compressed_thumb!=null) {
+           videoFile.delete();
+           compressed_thumb.delete();
+       }
 
-        videoFile.delete();
-        compressed_thumb.delete();
 
     }
 
@@ -305,7 +308,8 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
 
             Uri selectedVideo = data.getData();
 
-            final String    realPath=getPath(selectedVideo);
+          //  final String    realPath=getPath(selectedVideo);
+            final String    realPath= RealPathUtil.getPath(getActivity(),selectedVideo);
            File file = new File(realPath);
             if (file.length()/(1024*1024) <= 15) {
               videoFile=file;
@@ -373,6 +377,7 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
 
     public String getPath(Uri uri) {
         String[] projection = { MediaStore.Video.Media.DATA };
+
         Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
         if (cursor != null) {
             // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL

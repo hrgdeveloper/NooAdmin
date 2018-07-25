@@ -39,6 +39,7 @@ import com.developer.hrg.nooadmin.Helper.MyAlert;
 import com.developer.hrg.nooadmin.Helper.MyProgress;
 import com.developer.hrg.nooadmin.Helper.MySnack;
 import com.developer.hrg.nooadmin.Helper.ProgressRequestBody;
+import com.developer.hrg.nooadmin.Helper.RealPathUtil;
 import com.developer.hrg.nooadmin.MainActivity.MainActivity;
 import com.developer.hrg.nooadmin.Models.Admin;
 import com.developer.hrg.nooadmin.Models.Chanel;
@@ -275,8 +276,8 @@ public class PictureFragment extends Fragment implements View.OnClickListener,Pr
         if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null)  {
 
             Uri selectedImage = data.getData();
-            String    realPath=getRealPathFromURI(getActivity(),selectedImage);
-
+            //String    realPath=getRealPathFromURI(getActivity(),selectedImage);
+            final String    realPath= RealPathUtil.getPath(getActivity(),selectedImage);
             String filePath = imageCompression.compressImage(realPath);
 
             file = new File(filePath);

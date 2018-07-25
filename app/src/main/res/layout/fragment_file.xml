@@ -1,0 +1,136 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@android:color/white"
+    android:clickable="true"
+    android:id="@+id/coordinate_file_fragment"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.developer.hrg.nooadmin.message_fragments.PictureFragment">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:theme="@style/ThemeOverlay.AppCompat.Light">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:id="@+id/toolbar_file"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark"
+
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="انتخاب فایل "
+                    android:id="@+id/tv_fileFragment_gallery"
+                    android:textStyle="bold"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:drawableLeft="@android:drawable/ic_menu_camera"
+                    android:gravity="center"
+                    android:drawableTint="@android:color/white"
+                    />
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ارسال"
+                    android:layout_toLeftOf="@+id/tv_fileFragment_gallery"
+                    android:id="@+id/tv_fileFragment_send"
+                    android:textStyle="bold"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:drawableLeft="@drawable/tick"
+                    android:gravity="center"
+                    android:drawableTint="@android:color/white"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0%"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_file_percent"
+                    android:textColor="@android:color/white"
+                    />
+            </RelativeLayout>
+
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/_50sdp"
+            android:minWidth="@dimen/_50sdp"
+            android:text="File"
+            android:background="@drawable/rounded_btn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/btn_type_file"
+            android:foreground="?attr/selectableItemBackground"
+            android:textColor="@android:color/white"
+            android:layout_margin="@dimen/_5sdp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="shadmehr.mp3"
+            android:visibility="invisible"
+            android:id="@+id/tv_file_name"
+            app:layout_constraintLeft_toRightOf="@+id/btn_type_file"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3.4mb"
+            android:visibility="invisible"
+            android:id="@+id/tv_file_size"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_type_file"
+            android:layout_marginRight="@dimen/_5sdp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginEnd="@dimen/_5sdp" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:id="@+id/view_fake_file"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:background="@android:color/black"
+            app:layout_constraintTop_toBottomOf="@+id/btn_type_file"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+        <android.support.v7.widget.AppCompatEditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/view_fake_file"
+            android:hint="متن مورد نظر شما"
+            android:background="@null"
+            android:id="@+id/et_file_text"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:minLines="4"
+            android:paddingEnd="@dimen/_5sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="right"
+            />
+
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.design.widget.CoordinatorLayout>

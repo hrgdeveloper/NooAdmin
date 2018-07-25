@@ -20,6 +20,7 @@ import com.developer.hrg.nooadmin.Helper.AdminInfo;
 import com.developer.hrg.nooadmin.Helper.InternetCheck;
 import com.developer.hrg.nooadmin.Models.Admin;
 import com.developer.hrg.nooadmin.R;
+import com.developer.hrg.nooadmin.message_fragments.VideoFragment;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 AdminInfo adminInfo ;
@@ -72,6 +73,7 @@ AdminInfo adminInfo ;
                 Toast.makeText(MainActivity.this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
             }else {
                 openFragment(new Fragment_UserManage(),"userManage", false);
+
             }
 
         }else if (view==rt_mNewChanel) {

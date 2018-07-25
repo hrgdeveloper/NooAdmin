@@ -39,6 +39,15 @@ public interface ApiInterface {
     Call<SimpleResponse> mChanel(@Header("AuthorizationMyAd") String header ,@Part MultipartBody.Part pic , @Part("details")RequestBody details);
 
 
+    @Multipart
+    @POST("updateChanelPic/{chanel_id}")
+    Call<SimpleResponse> updateChanelPic(@Header("AuthorizationMyAd") String header ,@Path("chanel_id") int chanel_id ,  @Part MultipartBody.Part pic , @Part("last_pic_name") RequestBody content);
+
+    @Multipart
+    @POST("addChanelPic/{chanel_id}")
+    Call<SimpleResponse> addChanelPic(@Header("AuthorizationMyAd") String header ,@Path("chanel_id") int chanel_id ,  @Part MultipartBody.Part pic );
+
+
     @GET("getAllChanels")
     Call<SimpleResponse> getAllChanels(@Header("AuthorizationMyAd") String header);
 
@@ -47,7 +56,6 @@ public interface ApiInterface {
     Call<SimpleResponse> makeSimpleMessage(@Header("AuthorizationMyAd") String header,@Path("id") int chanel_id, @Part("content") RequestBody content
 
     );
-
 
     @Multipart
     @POST("chanels/{id}/message")
@@ -61,6 +69,18 @@ public interface ApiInterface {
             , @Part MultipartBody.Part videoFile , @Part MultipartBody.Part file
     );
 
+    @Multipart
+    @POST("chanels/{id}/message")
+    Call<SimpleResponse> makeAudioMessage(@Header("AuthorizationMyAd") String header,@Path("id") int chanel_id, @Part("content") RequestBody content
+            , @Part MultipartBody.Part audiFile
+    );
+
+    @Multipart
+    @POST("chanels/{id}/message")
+    Call<SimpleResponse> makeFileMessage(@Header("AuthorizationMyAd") String header,@Path("id") int chanel_id, @Part("content") RequestBody content
+            , @Part MultipartBody.Part audiFile
+    );
+
 
     @GET("getAllComments/{chanel_id}")
     Call<SimpleResponse> getAllComments(@Header("AuthorizationMyAd") String header,@Path("chanel_id") int chanel_id
@@ -69,5 +89,8 @@ public interface ApiInterface {
     @FormUrlEncoded
     @PUT("setCommentState/{comment_id}")
     Call<SimpleResponse> setCommentState(@Header("AuthorizationMyAd") String header , @Path("comment_id") int user_id , @Field("state") int status);
+
+
+
 
 }

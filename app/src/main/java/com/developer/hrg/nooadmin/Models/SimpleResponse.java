@@ -22,6 +22,17 @@ public class SimpleResponse {
     @SerializedName("comments")
     ArrayList<Comment> comments ;
 
+    @SerializedName("pic_name")
+    String  pic_name ;
+
+    public String getPic_name() {
+        return pic_name;
+    }
+
+    public void setPic_name(String pic_name) {
+        this.pic_name = pic_name;
+    }
+
     public ArrayList<Comment> getComments() {
         return comments;
     }

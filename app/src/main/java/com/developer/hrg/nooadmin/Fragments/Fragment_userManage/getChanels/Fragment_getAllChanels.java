@@ -1,13 +1,26 @@
 package com.developer.hrg.nooadmin.Fragments.Fragment_userManage.getChanels;
 
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,18 +32,30 @@ import com.developer.hrg.nooadmin.Fragments.Fragment_userManage.comment.CommentF
 import com.developer.hrg.nooadmin.Helper.AdminInfo;
 import com.developer.hrg.nooadmin.Helper.ApiInterface;
 import com.developer.hrg.nooadmin.Helper.Client;
+import com.developer.hrg.nooadmin.Helper.ImageCompression;
+import com.developer.hrg.nooadmin.Helper.InternetCheck;
 import com.developer.hrg.nooadmin.Helper.MyAlert;
+import com.developer.hrg.nooadmin.Helper.MyProgress;
 import com.developer.hrg.nooadmin.MainActivity.MainActivity;
 import com.developer.hrg.nooadmin.Models.Chanel;
 import com.developer.hrg.nooadmin.Models.SimpleResponse;
 import com.developer.hrg.nooadmin.R;
+import com.developer.hrg.nooadmin.message_fragments.AudioFragment;
+import com.developer.hrg.nooadmin.message_fragments.FileFragment;
 import com.developer.hrg.nooadmin.message_fragments.PictureFragment;
 import com.developer.hrg.nooadmin.message_fragments.Simple_fragment;
 import com.developer.hrg.nooadmin.message_fragments.VideoFragment;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,9 +67,19 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
   RecyclerView recyclerView;
     ArrayList<Chanel> chanels = new ArrayList<>();
     GetChanelsAdapter adapter_chanels ;
+    ImageCompression imageCompression;
+    File pic_update = null ;
+    File pic_add = null ;
+
+    String last_pic_name = null ;
+    int chanel_id;
+    int position_list;
+
+
    // LinearLayoutManager linearLayoutManager ;
     AdminInfo adminInfo ;
-
+    public static final int GALLERY_REQUEST_FOR_UPDATE_PROFILE = 101 ;
+    public static final int GALLERY_REQUEST_FOR_ADD_PROFILE= 102 ;
     public Fragment_getAllChanels() {
 
     }
@@ -55,6 +90,7 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
         adapter_chanels=new GetChanelsAdapter(getActivity(),chanels);
      //   linearLayoutManager=new LinearLayoutManager(getActivity());
         adminInfo=new AdminInfo(getActivity());
+        imageCompression=new ImageCompression(getActivity());
 
     }
 
@@ -126,6 +162,47 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
 
                     }else if (item.getItemId()==R.id.menu_message_movie) {
                         openFragment(VideoFragment.getInstance(chanels.get(position)),true);
+                    }else if (item.getItemId()==R.id.menu_message_audio) {
+                        openFragment(AudioFragment.getInstance(chanels.get(position)),true);
+                    }else if (item.getItemId()==R.id.menu_message_file) {
+                        openFragment(FileFragment.getInstance(chanels.get(position)),true);
+                    } else if (item.getItemId()==R.id.menu_profile_update) {
+                        if (!InternetCheck.isOnline(getActivity())) {
+                            Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+                        }else {
+                            if (Build.VERSION.SDK_INT>= 23) {
+                                last_pic_name=chanels.get(position).getThumb();
+                                chanel_id = Integer.valueOf(chanels.get(position).getChanel_id());
+                                position_list=position;
+
+                                askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,GALLERY_REQUEST_FOR_UPDATE_PROFILE);
+
+                            }else {
+                                last_pic_name=chanels.get(position).getThumb();
+                                chanel_id = Integer.valueOf(chanels.get(position).getChanel_id());
+                                position_list=position;
+                                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                startActivityForResult(intent, GALLERY_REQUEST_FOR_UPDATE_PROFILE);
+
+                            }
+                        }
+
+                    }else if (item.getItemId()==R.id.menu_profile_add) {
+                        if (Build.VERSION.SDK_INT>= 23) {
+                            chanel_id = Integer.valueOf(chanels.get(position).getChanel_id());
+                            position_list=position;
+                            askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,GALLERY_REQUEST_FOR_ADD_PROFILE);
+
+                        }else {
+                            chanel_id = Integer.valueOf(chanels.get(position).getChanel_id());
+                            position_list=position;
+                            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            startActivityForResult(intent, GALLERY_REQUEST_FOR_ADD_PROFILE);
+
+                        }
+
+                    }else if (item.getItemId()==R.id.menu_get_profiles) {
+
                     }
 
                 return false;
@@ -160,4 +237,185 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
       fragmentTransaction.commit();
       ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
+
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GALLERY_REQUEST_FOR_UPDATE_PROFILE && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+            Uri selectedImage = data.getData();
+            String    realPath=getRealPathFromURI(getActivity(),selectedImage);
+            String filePath = imageCompression.compressImage(realPath);
+            pic_update = new File(filePath);
+            MyProgress.showProgress(getActivity(),"در حال ارسال ...");
+            RequestBody req_lastPicName = RequestBody.create(MediaType.parse("text/plain"),last_pic_name);
+            RequestBody req_pic = RequestBody.create(MediaType.parse("image/jpeg") , pic_update);
+            MultipartBody.Part part_pic = MultipartBody.Part.createFormData("pic",pic_update.getName(),req_pic);
+
+            ApiInterface api = Client.getClient().create(ApiInterface.class);
+            Call<SimpleResponse> profile_call = api.updateChanelPic(adminInfo.getAdmin().getApikey() ,chanel_id, part_pic,req_lastPicName);
+            profile_call.enqueue(new Callback<SimpleResponse>() {
+                @Override
+                public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                    if (!response.isSuccessful()) {
+                        MyProgress.cancelProgress();
+                        Toast.makeText(getActivity(), "خطلایی پیش آمده دوباره تلاش کنید", Toast.LENGTH_SHORT).show();
+
+
+                    }else {
+                        boolean error = response.body().isError();
+                        String message = response.body().getMessage();
+                        if (!error) {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            MyProgress.cancelProgress();
+                            Chanel chanel = chanels.get(position_list);
+                            chanel.setThumb(response.body().getPic_name());
+                            chanels.set(position_list,chanel);
+                            adapter_chanels.notifyDataSetChanged();
+
+
+                        }else {
+                            MyProgress.cancelProgress();
+                            Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                    Toast.makeText(getActivity() , "خطایی پیش آمده لطفا دوباره تلاش کنید", Toast.LENGTH_SHORT).show();
+                    MyProgress.cancelProgress();
+                }
+            });
+
+
+        }else if (requestCode == GALLERY_REQUEST_FOR_ADD_PROFILE && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+            Uri selectedImage = data.getData();
+            String    realPath=getRealPathFromURI(getActivity(),selectedImage);
+            String filePath = imageCompression.compressImage(realPath);
+            pic_add = new File(filePath);
+            MyProgress.showProgress(getActivity(),"در حال ارسال ...");
+
+            RequestBody req_pic = RequestBody.create(MediaType.parse("image/jpeg") , pic_add);
+            MultipartBody.Part part_pic = MultipartBody.Part.createFormData("pic",pic_add.getName(),req_pic);
+
+            ApiInterface api = Client.getClient().create(ApiInterface.class);
+            Call<SimpleResponse> profile_call = api.addChanelPic(adminInfo.getAdmin().getApikey() ,chanel_id, part_pic);
+            profile_call.enqueue(new Callback<SimpleResponse>() {
+                @Override
+                public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                    if (!response.isSuccessful()) {
+                        MyProgress.cancelProgress();
+                        Toast.makeText(getActivity(), "خطلایی پیش آمده دوباره تلاش کنید", Toast.LENGTH_SHORT).show();
+
+
+                    }else {
+                        boolean error = response.body().isError();
+                        String message = response.body().getMessage();
+                        if (!error) {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            MyProgress.cancelProgress();
+
+
+                        }else {
+                            MyProgress.cancelProgress();
+                            Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                    Toast.makeText(getActivity() , "خطایی پیش آمده لطفا دوباره تلاش کنید", Toast.LENGTH_SHORT).show();
+                    MyProgress.cancelProgress();
+                }
+            });
+
+        }
+
+    }
+    private void askForPermission(String permission, Integer requestCode) {
+    if (requestCode==GALLERY_REQUEST_FOR_ADD_PROFILE  ) {
+            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permission)) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{permission}, requestCode);
+
+                } else {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{permission}, requestCode);
+                }
+            } else {
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, GALLERY_REQUEST_FOR_ADD_PROFILE);
+
+
+            }
+        }else if (requestCode==GALLERY_REQUEST_FOR_UPDATE_PROFILE) {
+
+        if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permission)) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{permission}, requestCode);
+
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{permission}, requestCode);
+            }
+        } else {
+            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, GALLERY_REQUEST_FOR_UPDATE_PROFILE);
+
+
+        }
+    }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+
+
+
+
+            case GALLERY_REQUEST_FOR_ADD_PROFILE:
+                if(ActivityCompat.checkSelfPermission(getActivity(), permissions[0]) == PackageManager.PERMISSION_GRANTED ) {
+
+                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, GALLERY_REQUEST_FOR_ADD_PROFILE);
+
+                }else {
+
+                    Toast.makeText(getActivity(),"عدم دسترسی به گالری",Toast.LENGTH_LONG).show();
+                }
+
+               break;
+            case GALLERY_REQUEST_FOR_UPDATE_PROFILE :
+
+                if(ActivityCompat.checkSelfPermission(getActivity(), permissions[0]) == PackageManager.PERMISSION_GRANTED ) {
+
+                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, GALLERY_REQUEST_FOR_UPDATE_PROFILE);
+
+                }else {
+
+                    Toast.makeText(getActivity(),"عدم دسترسی به گالری",Toast.LENGTH_LONG).show();
+                }
+        }
+    }
+
 }

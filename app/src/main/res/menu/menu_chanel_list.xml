@@ -18,10 +18,9 @@ android:layout_gravity="end"
         >
         <item android:title="ارسال پیام ساده"
             android:id="@+id/menu_message_simple"/>
-        <item android:title="ارسال پیام عکس دار "
+        <item android:title="ارسال پیام حاوی عکس "
             android:id="@+id/menu_message_pic"
             />
-
         <item android:title="ارسال فیلم"
             android:id="@+id/menu_message_movie"/>
         <item android:title="ارسال صوت"
@@ -30,10 +29,27 @@ android:layout_gravity="end"
             android:id="@+id/menu_message_file"/>
     </menu>
 </item>
-<item android:title="ویرایش مشخصات کانال"
-    android:id="@+id/menu_update_chanel"
-    />
-<item android:title="اضافه کردن عکس کانال"
-    android:id="@+id/menu_newpic"/>
 
+<item android:title="مدیریت عکس های کانال"
+    android:id="@+id/menu_newpic">
+    <menu
+        android:layoutDirection="rtl"
+        android:gravity="end"
+        android:layout_gravity="end"
+        >
+    <item android:title="به روز رسانی عکس کانال"
+        android:id="@+id/menu_profile_update"/>
+
+    <item android:title="اضافه کردن عکس به کانال"
+        android:id="@+id/menu_profile_add"
+        />
+
+    <item android:title="نمایش عکس های کانال"
+        android:id="@+id/menu_get_profiles"/>
+
+</menu>
+</item>
+    <item android:title="ویرایش مشخصات کانال"
+        android:id="@+id/menu_update_chanel"
+        />
 </menu>
