@@ -21,9 +21,21 @@ public class SimpleResponse {
 
     @SerializedName("comments")
     ArrayList<Comment> comments ;
-
     @SerializedName("pic_name")
     String  pic_name ;
+
+    public ArrayList<Profile> getProfiles() {
+        return profiles;
+    }
+
+    public void setProfiles(ArrayList<Profile> profiles) {
+        this.profiles = profiles;
+    }
+
+    @SerializedName("photos")
+
+    ArrayList<Profile> profiles;
+
 
     public String getPic_name() {
         return pic_name;

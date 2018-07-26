@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.developer.hrg.nooadmin.Fragments.Fragment_userManage.comment.CommentFragment;
+import com.developer.hrg.nooadmin.Fragments.Fragment_userManage.profile.Profile_Fragment;
 import com.developer.hrg.nooadmin.Helper.AdminInfo;
 import com.developer.hrg.nooadmin.Helper.ApiInterface;
 import com.developer.hrg.nooadmin.Helper.Client;
@@ -202,6 +203,7 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
                         }
 
                     }else if (item.getItemId()==R.id.menu_get_profiles) {
+                        openFragment(Profile_Fragment.getInstance(Integer.valueOf( chanels.get(position).getChanel_id())),true);
 
                     }
 

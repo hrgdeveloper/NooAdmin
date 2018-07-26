@@ -38,7 +38,6 @@ public interface ApiInterface {
     @POST("makeChanel")
     Call<SimpleResponse> mChanel(@Header("AuthorizationMyAd") String header ,@Part MultipartBody.Part pic , @Part("details")RequestBody details);
 
-
     @Multipart
     @POST("updateChanelPic/{chanel_id}")
     Call<SimpleResponse> updateChanelPic(@Header("AuthorizationMyAd") String header ,@Path("chanel_id") int chanel_id ,  @Part MultipartBody.Part pic , @Part("last_pic_name") RequestBody content);
@@ -54,7 +53,6 @@ public interface ApiInterface {
     @Multipart
     @POST("chanels/{id}/message")
     Call<SimpleResponse> makeSimpleMessage(@Header("AuthorizationMyAd") String header,@Path("id") int chanel_id, @Part("content") RequestBody content
-
     );
 
     @Multipart
@@ -90,7 +88,7 @@ public interface ApiInterface {
     @PUT("setCommentState/{comment_id}")
     Call<SimpleResponse> setCommentState(@Header("AuthorizationMyAd") String header , @Path("comment_id") int user_id , @Field("state") int status);
 
-
-
+    @GET("getAllChanelsPhotos/{chanel_id}")
+     Call<SimpleResponse> getAllProfiles(@Path("chanel_id") int chanel_di);
 
 }

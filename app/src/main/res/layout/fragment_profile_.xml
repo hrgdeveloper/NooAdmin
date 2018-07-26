@@ -1,0 +1,57 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:id="@+id/framelayout_profile"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.developer.hrg.nooadmin.Fragments.Fragment_userManage.profile.Profile_Fragment">
+  <android.support.v4.view.ViewPager
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:id="@+id/viewpager_profile"
+      >
+
+  </android.support.v4.view.ViewPager>
+
+  <android.support.constraint.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/_55sdp"
+      android:background="#88000000"
+      android:id="@+id/constraint_profile"
+      >
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/back"
+        android:id="@+id/iv_back_profile"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="@dimen/_5sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="@dimen/_14sdp"
+
+        android:id="@+id/tv_count_profile"
+        app:layout_constraintLeft_toRightOf="@+id/iv_back_profile"
+        android:layout_marginLeft="@dimen/_25sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@android:color/white"
+        />
+
+  </android.support.constraint.ConstraintLayout>
+  <ProgressBar
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/progressbar_profile"
+      android:layout_gravity="center"
+
+      />
+
+</FrameLayout>
