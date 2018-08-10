@@ -12,4 +12,13 @@
     android:id="@+id/recycle_chanels"
     >
 </android.support.v7.widget.RecyclerView>
+
+    <ImageView
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="@dimen/_60sdp"
+        android:layout_gravity="center"
+        android:src="@drawable/reload"
+        android:visibility="gone"
+        android:id="@+id/iv_reload_getchanels"
+        />
 </FrameLayout>

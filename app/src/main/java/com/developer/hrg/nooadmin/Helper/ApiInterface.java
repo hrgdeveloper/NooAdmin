@@ -8,9 +8,11 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -27,6 +29,10 @@ public interface ApiInterface {
     @POST("LogAdmin_noor")
     Call<SimpleResponse> login(@Field("username") String username,@Field("password") String password);
 
+    @FormUrlEncoded
+    @POST("createAdmin")
+    Call<SimpleResponse> createAdmin(@Header("AuthorizationMyAd") String header, @Field("username") String username,@Field("password") String password);
+
     @GET("getUsers")
     Call<SimpleResponse> getUsers(@Header("AuthorizationMyAd") String header);
 
@@ -39,6 +45,10 @@ public interface ApiInterface {
     Call<SimpleResponse> mChanel(@Header("AuthorizationMyAd") String header ,@Part MultipartBody.Part pic , @Part("details")RequestBody details);
 
     @Multipart
+    @POST("notify")
+    Call<SimpleResponse> notify(@Header("AuthorizationMyAd") String header ,@Part MultipartBody.Part pic , @Part("details")RequestBody details);
+
+    @Multipart
     @POST("updateChanelPic/{chanel_id}")
     Call<SimpleResponse> updateChanelPic(@Header("AuthorizationMyAd") String header ,@Path("chanel_id") int chanel_id ,  @Part MultipartBody.Part pic , @Part("last_pic_name") RequestBody content);
 
@@ -46,6 +56,15 @@ public interface ApiInterface {
     @POST("addChanelPic/{chanel_id}")
     Call<SimpleResponse> addChanelPic(@Header("AuthorizationMyAd") String header ,@Path("chanel_id") int chanel_id ,  @Part MultipartBody.Part pic );
 
+
+
+    @FormUrlEncoded
+    @HTTP(method = "DELETE", path = Config.OFFLINE_URL + "deleteChanelPhoto/{photo_id}", hasBody = true)
+    Call<SimpleResponse> deleteChanelPhoto (@Header("AuthorizationMyAd") String header ,@Path("photo_id") int photo_id,@Field("photo_name") String photo_name);
+
+
+    @GET("getAllChanelsPhotos/{chanel_id}")
+    Call<SimpleResponse> getAllProfiles(@Path("chanel_id") int chanel_di);
 
     @GET("getAllChanels")
     Call<SimpleResponse> getAllChanels(@Header("AuthorizationMyAd") String header);
@@ -87,8 +106,5 @@ public interface ApiInterface {
     @FormUrlEncoded
     @PUT("setCommentState/{comment_id}")
     Call<SimpleResponse> setCommentState(@Header("AuthorizationMyAd") String header , @Path("comment_id") int user_id , @Field("state") int status);
-
-    @GET("getAllChanelsPhotos/{chanel_id}")
-     Call<SimpleResponse> getAllProfiles(@Path("chanel_id") int chanel_di);
 
 }

@@ -9,14 +9,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.developer.hrg.nooadmin.Helper.DateConvertor;
 import com.developer.hrg.nooadmin.Models.User;
 import com.developer.hrg.nooadmin.R;
 
+import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class GetUser_Adapter extends RecyclerView.Adapter<GetUser_Adapter.Holder> {
-    Context context ;
-    ArrayList<User> userList;
+    private Context context ;
+    private ArrayList<User> userList;
+    private ArrayList<User> userListCopy =new ArrayList<>();
     MyClickListener myClickListener;
         public GetUser_Adapter(Context context , ArrayList<User> userList) {
             this.context=context;
@@ -31,6 +38,24 @@ public class GetUser_Adapter extends RecyclerView.Adapter<GetUser_Adapter.Holder
      this.myClickListener=myClickListener;
  }
 
+ public void copyItems(ArrayList<User> copy ) {
+     userListCopy.addAll(copy);
+ }
+ public void filter(String text) {
+     userList.clear();
+     if (text.isEmpty()) {
+         userList.addAll(userListCopy);
+     }else  {
+         text=text.toLowerCase();
+         for (User user : userListCopy) {
+             if (user.getUsername().contains(text) || user.getMobile().contains(text)) {
+                 userList.add(user);
+             }
+         }
+     }
+     notifyDataSetChanged();
+ }
+
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -43,11 +68,16 @@ public class GetUser_Adapter extends RecyclerView.Adapter<GetUser_Adapter.Holder
     @Override
     public void onBindViewHolder(Holder holder, int position) {
         User user = userList.get(position);
+        Calendar calendar = DateConvertor.getCalendarFromString(user.getCreated_at());
+        String shamsi_date = DateConvertor.shamsiDate(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.DAY_OF_MONTH));
+        String curTime = String.format("%02d:%02d", calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE));
+
+
 
         holder.tv_count.setText(""+Integer.valueOf(position+1));
         holder.tv_mobile.setText("شماره تماس : "+user.getMobile());
         holder.tv_user_id.setText("شماره کاربری :"+user.getId());
-        holder.tv_date.setText(user.getCreated_at());
+        holder.tv_date.setText(shamsi_date + "  " + curTime );
         if (user.getUsername().equalsIgnoreCase("e")) {
             holder.tv_username.setText("نام کاربری : تکمیل نشده است");
         }else {
@@ -65,9 +95,10 @@ public class GetUser_Adapter extends RecyclerView.Adapter<GetUser_Adapter.Holder
         }else {
             holder.iv_complete.setImageDrawable(context.getResources().getDrawable(R.drawable.close));
         }
-
-
     }
+
+
+
 
     @Override
     public int getItemCount() {

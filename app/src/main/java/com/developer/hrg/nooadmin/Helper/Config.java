@@ -11,7 +11,8 @@ public class Config {
     public static final String CHANEL_THUMB_BASE_OFFILNE = "http://192.168.1.147/noor/uploads/chanel_thumb/";
     public static final String CHANEL_THUMB_BASE_ONLLINE = "http://keepwords.ir/noor/uploads/chanel_thumb/";
 
-
+    public static final String CHANEL_PIC_BASE_OFFILNE = "http://192.168.1.147/noor/uploads/chanel_pics/";
+    public static final String CHANEL_PIC_BASE_ONLLINE = "http://keepwords.ir/noor/uploads/chanel_pics/";
 
     public static final String MESSAGE_MESSAGE = "message";
 
@@ -20,5 +21,7 @@ public class Config {
 
     public static final String PROFILE_PIC_THUMB_ADDRESS  = "http://192.168.1.147/noor/uploads/user_profile/thumb/";
     public static final String PROFILE_PIC_THUMB_ADDRESS_ONLINE  = "http://keepwords.ir/noor/uploads/user_profile/thumb/";
+
+
 
 }

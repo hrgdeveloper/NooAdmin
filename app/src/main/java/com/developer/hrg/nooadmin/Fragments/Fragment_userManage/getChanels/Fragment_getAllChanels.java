@@ -26,10 +26,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.developer.hrg.nooadmin.Fragments.Fragment_userManage.comment.CommentFragment;
 import com.developer.hrg.nooadmin.Fragments.Fragment_userManage.profile.Profile_Fragment;
+import com.developer.hrg.nooadmin.Helper.AdminData;
 import com.developer.hrg.nooadmin.Helper.AdminInfo;
 import com.developer.hrg.nooadmin.Helper.ApiInterface;
 import com.developer.hrg.nooadmin.Helper.Client;
@@ -39,6 +41,7 @@ import com.developer.hrg.nooadmin.Helper.MyAlert;
 import com.developer.hrg.nooadmin.Helper.MyProgress;
 import com.developer.hrg.nooadmin.MainActivity.MainActivity;
 import com.developer.hrg.nooadmin.Models.Chanel;
+import com.developer.hrg.nooadmin.Models.Comment_Read;
 import com.developer.hrg.nooadmin.Models.SimpleResponse;
 import com.developer.hrg.nooadmin.R;
 import com.developer.hrg.nooadmin.message_fragments.AudioFragment;
@@ -52,6 +55,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 import okhttp3.MediaType;
@@ -71,10 +75,14 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
     ImageCompression imageCompression;
     File pic_update = null ;
     File pic_add = null ;
-
     String last_pic_name = null ;
     int chanel_id;
     int position_list;
+    ImageView iv_reload ;
+    ArrayList<Comment_Read> comment_reads = new ArrayList<>();
+    AdminData adminData ;
+    private static Fragment_getAllChanels  instance ;
+    private static final String TAG = Fragment_getAllChanels.class.getName();
 
 
    // LinearLayoutManager linearLayoutManager ;
@@ -88,11 +96,19 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter_chanels=new GetChanelsAdapter(getActivity(),chanels);
-     //   linearLayoutManager=new LinearLayoutManager(getActivity());
+        instance=this;
+        adminData=new AdminData(getActivity());
+        if (adminData.hasreadData()) {
+            comment_reads.addAll(adminData.getAllReads());
+
+        }
+        adapter_chanels=new GetChanelsAdapter(getActivity(),chanels,comment_reads);
         adminInfo=new AdminInfo(getActivity());
         imageCompression=new ImageCompression(getActivity());
 
+    }
+    public static Fragment_getAllChanels getInstance() {
+        return instance;
     }
 
     @Override
@@ -101,6 +117,7 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
 
         View view = inflater.inflate(R.layout.fragment_get_all_chanels, container, false);
         recyclerView=(RecyclerView)view.findViewById(R.id.recycle_chanels);
+        iv_reload=(ImageView)view.findViewById(R.id.iv_reload_getchanels);
         return view;
 
 
@@ -112,6 +129,18 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter_chanels);
         adapter_chanels.setMyClickListener(this);
+         getChanels();
+
+        iv_reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getChanels();
+            }
+        });
+
+    }
+    public void getChanels(){
+        iv_reload.setVisibility(View.GONE);
         ApiInterface api = Client.getClient().create(ApiInterface.class);
         Call<SimpleResponse> call = api.getAllChanels(adminInfo.getAdmin().getApikey());
         call.enqueue(new Callback<SimpleResponse>() {
@@ -125,6 +154,14 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
                     }
                 }else {
                     chanels.addAll(response.body().getChanels());
+                    if (comment_reads.size() < chanels.size()) {
+                        for (int i = comment_reads.size(); i < chanels.size(); i++) {
+                            Comment_Read read = new Comment_Read(Integer.valueOf(chanels.get(i).getChanel_id()),0);
+                            adminData.addread(read);
+                            comment_reads.add(read);
+                        }
+                    }
+
                     adapter_chanels.notifyDataSetChanged();
 
                 }
@@ -133,16 +170,28 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
 
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
-                MyAlert.showAlert(getActivity(),"خطای",t.getMessage().toString());
+                if (t instanceof SocketTimeoutException){
+                    Toast.makeText(getActivity(), R.string.timeout , Toast.LENGTH_SHORT).show();
+                }else if (t instanceof IOException) {
+                    Toast.makeText(getActivity(), R.string.no_internet_connection , Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(getActivity(), R.string.connection_problem , Toast.LENGTH_SHORT).show();
+                    Log.e(TAG,t.getMessage());
+                }
+                iv_reload.setVisibility(View.VISIBLE);
             }
         });
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
         ((MainActivity)getActivity()).setToolbarText("مدیریت کانال ها");
+
+    }
+    public void updateRead(int position , Comment_Read comment_read) {
+        comment_reads.set(position,comment_read);
+        adapter_chanels.notifyDataSetChanged();
 
     }
 
@@ -223,7 +272,8 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
 
     @Override
     public void comment_clicked(int position, View view) {
-        openFragment(CommentFragment.getInstance(Integer.valueOf(chanels.get(position).getChanel_id()),chanels.get(position).getName()),false);
+        openFragment(CommentFragment.getInstance(Integer.valueOf(chanels.get(position).getChanel_id()),chanels.get(position).getName(),position),
+                false);
 
     }
 
@@ -255,6 +305,7 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
             }
         }
     }
+
 
 
     @Override

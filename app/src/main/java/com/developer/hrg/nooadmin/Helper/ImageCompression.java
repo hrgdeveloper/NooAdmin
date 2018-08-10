@@ -44,7 +44,7 @@ public class ImageCompression extends AsyncTask<String, Void, String> {
 
     public String compressImage(String imagePath) {
         Bitmap scaledBitmap = null;
-
+        String extenstion =      imagePath.substring(imagePath.lastIndexOf("."));
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = false;
         Bitmap bmp = BitmapFactory.decodeFile(imagePath, options);
@@ -124,7 +124,8 @@ public class ImageCompression extends AsyncTask<String, Void, String> {
             e.printStackTrace();
         }
         FileOutputStream out = null;
-        String filepath = getFilename();
+
+        String filepath = getFilename(extenstion);
         try {
             out = new FileOutputStream(filepath);
 
@@ -158,7 +159,7 @@ public class ImageCompression extends AsyncTask<String, Void, String> {
         return inSampleSize;
     }
 
-    public String getFilename() {
+    public String getFilename(String extenstion) {
         File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
                 + "/noor/"
                 + "/Files/Compressed/thumbs");
@@ -168,7 +169,7 @@ public class ImageCompression extends AsyncTask<String, Void, String> {
             mediaStorageDir.mkdirs();
         }
         String currnet = String.valueOf(System.currentTimeMillis()) ;
-        String mImageName="IMG"+ currnet.substring(currnet.length()-5)  +".jpg";
+        String mImageName="IMG"+ currnet.substring(currnet.length()-5)  +extenstion;
         String uriString = (mediaStorageDir.getAbsolutePath() + "/"+ mImageName);;
         return uriString;
 

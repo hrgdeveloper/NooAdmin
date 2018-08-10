@@ -8,4 +8,6 @@
     <string name="managment_toolbar_txt">صفحه اصلی مدیریت</string>
     <string name="no_internet_connection">عدم دسترسی به اینترنت</string>
     <string name="l_make_chanel_name">نام کانال</string>
+    <string name="timeout">عدم ارتباط با سرور</string>
+    <string name="connection_problem">خطا در ارتباط با سرور</string>
 </resources>

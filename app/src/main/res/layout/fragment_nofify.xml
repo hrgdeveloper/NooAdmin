@@ -1,0 +1,81 @@
+<android.support.v4.widget.NestedScrollView
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   android:clickable="true"
+    android:fillViewport="true"
+    android:background="@android:color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.developer.hrg.nooadmin.Fragments.Fragment_userManage.notification.NofifyFragment">
+
+<ImageView
+    android:layout_width="@dimen/_50sdp"
+    android:layout_height="@dimen/_50sdp"
+    android:src="@drawable/gallery"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    android:layout_marginLeft="@dimen/_10sdp"
+    android:id="@+id/iv_notify_gallery"
+    android:layout_marginTop="@dimen/_5sdp"
+    android:layout_marginRight="8dp"
+    />
+    <Button
+
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:background="@drawable/rounded_btn2"
+        android:id="@+id/btn_notify_send"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="ارسال "
+        />
+    <android.support.v7.widget.AppCompatEditText
+        android:layout_width="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_height="wrap_content"
+        android:hint="عنوان پیام"
+        android:singleLine="true"
+        android:maxLines="1"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:id="@+id/et_notify_title"
+        app:layout_constraintTop_toBottomOf="@+id/iv_notify_gallery"
+        />
+    <android.support.v7.widget.AppCompatEditText
+        android:layout_width="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_height="wrap_content"
+        android:hint="متن پیام"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:id="@+id/et_notify_text"
+        app:layout_constraintTop_toBottomOf="@+id/et_notify_title"
+        />
+
+    <ImageView
+        android:layout_width="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_height="0dp"
+        android:id="@+id/iv_notify_pic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_notify_text"
+
+        tools:layout_editor_absoluteX="8dp" />
+</android.support.constraint.ConstraintLayout>
+
+</android.support.v4.widget.NestedScrollView>

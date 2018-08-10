@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.developer.hrg.nooadmin.Helper.Config;
 import com.developer.hrg.nooadmin.Models.Chanel;
+import com.developer.hrg.nooadmin.Models.Comment_Read;
 import com.developer.hrg.nooadmin.R;
 
 import java.util.ArrayList;
@@ -21,9 +22,11 @@ public class GetChanelsAdapter extends RecyclerView.Adapter<GetChanelsAdapter.Ho
     Context context ;
     ArrayList<Chanel> chanels;
     MyClickListener myClickListener;
-        public GetChanelsAdapter(Context context , ArrayList<Chanel> chanels) {
+    ArrayList<Comment_Read> comment_reads;
+        public GetChanelsAdapter(Context context , ArrayList<Chanel> chanels , ArrayList<Comment_Read> comment_reads) {
             this.context=context;
             this.chanels=chanels;
+            this.comment_reads=comment_reads;
         }
 
  public interface MyClickListener{
@@ -52,6 +55,7 @@ public class GetChanelsAdapter extends RecyclerView.Adapter<GetChanelsAdapter.Ho
         holder.tv_admin_name.setText(chanel.getUsername());
         holder.tv_date.setText(chanel.getUpdated_at());
         holder.tv_cm_count.setText(chanel.getCm_count()+"");
+        holder.tv_cm_unread.setText(chanel.getCm_count() - comment_reads.get(position).getRead_cout()+" ");
         // inja 3 ta halat dare ya ham maseeage khalie ham type ke yani hanooz payami vase kanal ersal nashode
         // ya message khalie ke yani ye file bedone matn ersal shode
         // ya matn dashte akharan message ke matno neshon midim
@@ -73,12 +77,14 @@ public class GetChanelsAdapter extends RecyclerView.Adapter<GetChanelsAdapter.Ho
     }
 
     public class Holder extends RecyclerView.ViewHolder {
-        TextView tv_name,tv_date , tv_admin_name , tv_last , tv_cm_count  ;
+        TextView tv_name,tv_date , tv_admin_name , tv_last , tv_cm_count , tv_cm_unread  ;
         ImageView iv_profile  ;
         public Holder(View itemView) {
             super(itemView);
+
             tv_name=(TextView)itemView.findViewById(R.id.tv_custom_chanel_name);
             tv_cm_count=(TextView)itemView.findViewById(R.id.tv_custom_chanel_cm_count);
+            tv_cm_unread=(TextView)itemView.findViewById(R.id.tv_custom_chanel_cm_count_unread);
             tv_date=(TextView)itemView.findViewById(R.id.tv_custom_chanel_date);
             tv_admin_name=(TextView)itemView.findViewById(R.id.tv_custom_chanel_admin);
             iv_profile=(ImageView)itemView.findViewById(R.id.iv_custom_chanel_photo);

@@ -21,8 +21,6 @@
             android:minHeight="?attr/actionBarSize"
             app:theme="@style/ThemeOverlay.AppCompat.Dark"
             >
-
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -82,7 +80,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true">
 
-                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                <ImageView
+
                     android:id="@+id/iv_chanel_photo"
                     android:layout_width="@dimen/_60sdp"
                     android:layout_height="@dimen/_60sdp"
@@ -90,9 +89,9 @@
                     android:tint="@android:color/black"
                     android:layout_marginRight="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:src="@android:drawable/ic_menu_camera"
-                    app:civ_border_color="#FF000000"
-                    app:civ_border_width="0.5dp" />
+                    android:src="@drawable/gallery"
+
+                     />
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"

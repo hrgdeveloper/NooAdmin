@@ -161,51 +161,71 @@
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/_4sdp"
                     android:layout_weight="1"
-                    android:id="@+id/rt_temp"
+                    android:id="@+id/rt_notify"
                     android:background="@color/relative_background"
                     android:foreground="?attr/selectableItemBackground">
 
                     <ImageView
-                        android:id="@+id/iv_temp"
+                        android:id="@+id/iv_notification"
                         android:layout_width="@dimen/_60sdp"
                         android:layout_height="@dimen/_60sdp"
                         android:layout_centerInParent="true"
-                        android:src="@drawable/manage" />
+                        android:src="@drawable/notify" />
 
                     <TextView
                         android:id="@+id/textView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/iv_temp"
+                        android:layout_below="@+id/iv_notification"
                         android:layout_centerHorizontal="true"
-                        android:text="مدیریت کانال ها"
+                        android:text="اطلاع رسانی "
                         android:textColor="@android:color/black" />
 
                 </RelativeLayout>
 
-                <!--<Button-->
-                    <!--android:id="@+id/btn_newChanel"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_margin="2dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:background="@android:color/holo_green_light"-->
-                    <!--android:foreground="?attr/selectableItemBackground"-->
-                    <!--android:text="ساخت کانال جدید"-->
-                    <!--android:textColor="@android:color/white"-->
-                    <!--android:textSize="20sp" />-->
 
-                <!--<Button-->
-                    <!--android:id="@+id/btn_pageLists"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_margin="2dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:background="@android:color/holo_orange_dark"-->
-                    <!--android:foreground="?attr/selectableItemBackground"-->
-                    <!--android:text="تست"-->
-                    <!--android:textColor="@android:color/white"-->
-                    <!--android:textSize="20sp" />-->
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/_4sdp"
+                    android:layout_weight="1"
+                    android:id="@+id/rt_newAdmin"
+                    android:background="@color/relative_background"
+                    android:foreground="?attr/selectableItemBackground">
+
+                    <ImageView
+                        android:id="@+id/iv_new_admin"
+                        android:layout_width="@dimen/_60sdp"
+                        android:layout_height="@dimen/_60sdp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/newmanage" />
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/iv_new_admin"
+                        android:layout_centerHorizontal="true"
+                        android:text="ساخت مدیریت جدید"
+                        android:textColor="@android:color/black" />
+
+                </RelativeLayout>
+
+
+
+
+
             </LinearLayout>
         </LinearLayout>
 

@@ -33,7 +33,6 @@ public class SimpleResponse {
     }
 
     @SerializedName("photos")
-
     ArrayList<Profile> profiles;
 
 

@@ -281,6 +281,8 @@ public class PictureFragment extends Fragment implements View.OnClickListener,Pr
             String filePath = imageCompression.compressImage(realPath);
 
             file = new File(filePath);
+            Toast.makeText(getActivity(), file.length()+" ", Toast.LENGTH_SHORT).show();
+
             iv_pic.setImageURI(Uri.parse(filePath));
 
 //            frameLayout.setBackgroundColor(ContextCompat.getColor(getActivity(),android.R.color.black));

@@ -2,17 +2,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true"
-
     android:background="@android:color/white"
     tools:context="com.developer.hrg.nooadmin.Fragments.Fragment_userManage.userManage.Fragment_UserManage">
+
+    <android.support.v7.widget.SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchView"
+        android:visibility="gone"
+        app:queryHint="نام کاربری یا شماره کاربر"
+        >
+
+    </android.support.v7.widget.SearchView>
 
 <android.support.v7.widget.RecyclerView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_below="@+id/searchView"
     android:id="@+id/recyclerview_usermanage"
     >
 
 </android.support.v7.widget.RecyclerView>
+    <ImageView
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="@dimen/_60sdp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/reload"
+        android:visibility="gone"
+        android:id="@+id/iv_reload_getuser"
+        />
 
 </RelativeLayout>

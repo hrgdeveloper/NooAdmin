@@ -20,9 +20,9 @@ public class Client {
         if (retrofit==null) {
             Gson gson = new GsonBuilder().setLenient().create();
             final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .connectTimeout(10, TimeUnit.SECONDS)
-                    .writeTimeout(10, TimeUnit.MINUTES)
-                    .readTimeout(10, TimeUnit.MINUTES)
+                    .connectTimeout(15, TimeUnit.SECONDS)
+                    .writeTimeout(90, TimeUnit.MINUTES)
+                    .readTimeout(90, TimeUnit.MINUTES)
                     .build();
             retrofit=new Retrofit.Builder()
                     .baseUrl(Config.OFFLINE_URL)
@@ -30,8 +30,6 @@ public class Client {
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
-
-
         }
         return retrofit;
     }

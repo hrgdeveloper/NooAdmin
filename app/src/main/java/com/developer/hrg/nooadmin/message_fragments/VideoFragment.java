@@ -316,6 +316,21 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
             }else {
                 new VideoCompressor(realPath).execute();
             }
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(getActivity(), Uri.fromFile(videoFile));
+            time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            long timeInMillisec = Long.parseLong(time );
+
+            time = String.format("%02d:%02d ",
+                    TimeUnit.MILLISECONDS.toMinutes(timeInMillisec),
+                    TimeUnit.MILLISECONDS.toSeconds(timeInMillisec) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeInMillisec))
+            );
+
+            tv_time.setText(time);
+            tv_time.setVisibility(View.VISIBLE);
+
+
             Bitmap thumb = ThumbnailUtils.createVideoThumbnail(realPath,
                     MediaStore.Images.Thumbnails.MINI_KIND);
             bitmapToFile(thumb);
@@ -375,21 +390,21 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
     }
 
 
-    public String getPath(Uri uri) {
-        String[] projection = { MediaStore.Video.Media.DATA };
-
-        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
-        if (cursor != null) {
-            // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
-            // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
-            int column_index = cursor
-                    .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-
-        } else
-            return null;
-    }
+//    public String getPath(Uri uri) {
+//        String[] projection = { MediaStore.Video.Media.DATA };
+//
+//        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
+//        if (cursor != null) {
+//            // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
+//            // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
+//            int column_index = cursor
+//                    .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+//            cursor.moveToFirst();
+//            return cursor.getString(column_index);
+//
+//        } else
+//            return null;
+//    }
 
 
 

@@ -9,11 +9,16 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.developer.hrg.nooadmin.Fragments.Fragment_userManage.getChanels.Fragment_getAllChanels;
 import com.developer.hrg.nooadmin.Helper.ApiInterface;
 import com.developer.hrg.nooadmin.Helper.Client;
 import com.developer.hrg.nooadmin.Helper.InternetCheck;
@@ -29,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -38,13 +44,16 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Fragment_UserManage extends Fragment implements GetUser_Adapter.MyClickListener {
+public class Fragment_UserManage extends Fragment implements GetUser_Adapter.MyClickListener,SearchView.OnQueryTextListener {
 
 RecyclerView recyclerView ;
     ArrayList<User> user_list =new ArrayList<>();
     LinearLayoutManager linearLayoutManager ;
     GetUser_Adapter getUser_adapter ;
     Admin admin ;
+    ImageView iv_reload ;
+    SearchView searchView ;
+    private static final String TAG = Fragment_getAllChanels.class.getName();
     public Fragment_UserManage() {
         // Required empty public constructor
     }
@@ -60,17 +69,54 @@ RecyclerView recyclerView ;
         getUser_adapter.setMyClickListener(this);
          linearLayoutManager=new LinearLayoutManager(getActivity());
          admin= ((MainActivity)getActivity()).getAdmin();
+        iv_reload=(ImageView)view.findViewById(R.id.iv_reload_getuser);
+        searchView=(SearchView)view.findViewById(R.id.searchView);
+
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        MyProgress.showProgress(getActivity(),"در حال دریافت لیست کاربران..");
-        recyclerView.setLayoutManager(linearLayoutManager);
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
 
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        if (!searchView.isIconified()) {
+                            searchView.setIconified(true);
+                        }else {
+                            ((MainActivity)getActivity()).onBackPressed();
+                        }
+
+
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+        MyProgress.showProgress(getActivity(),"در حال دریافت لیست کاربران..");
+        searchView.setOnQueryTextListener(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(getUser_adapter);
         recyclerView.addItemDecoration(new SpacesItemDecoration(8));
+
+         getUsers();
+        iv_reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+             getUsers();
+            }
+        });
+    }
+
+    public void getUsers() {
+        iv_reload.setVisibility(View.GONE);
         ApiInterface apiInterface = Client.getClient().create(ApiInterface.class);
         Call<SimpleResponse> response = apiInterface.getUsers(admin.getApikey());
         response.enqueue(new Callback<SimpleResponse>() {
@@ -94,17 +140,28 @@ RecyclerView recyclerView ;
                         MyProgress.cancelProgress();
                         Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     }else {
+                        searchView.setVisibility(View.VISIBLE);
                         MyProgress.cancelProgress();
-                    user_list.addAll(response.body().getUser_list());
+                        user_list.addAll(response.body().getUser_list());
                         getUser_adapter.notifyDataSetChanged();
+                        getUser_adapter.copyItems(user_list);
+
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
-                  MyProgress.cancelProgress();
-                  MyAlert.showAlert(getActivity(),"خطا","به وجود آمدید خطای : "+ t.getMessage().toString() + "\n"+ "لطفا دوباره تلاش کنید");
+                MyProgress.cancelProgress();
+                if (t instanceof SocketTimeoutException){
+                    Toast.makeText(getActivity(), R.string.timeout , Toast.LENGTH_SHORT).show();
+                }else if (t instanceof IOException) {
+                    Toast.makeText(getActivity(), R.string.no_internet_connection , Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(getActivity(), R.string.connection_problem , Toast.LENGTH_SHORT).show();
+                    Log.e(TAG,t.getMessage());
+                }
+                iv_reload.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -113,7 +170,9 @@ RecyclerView recyclerView ;
     public void onResume() {
         super.onResume();
         ((MainActivity)getActivity()).setToolbarText("مدیریت کاربران");
+
     }
+
 
     @Override
     public void iv_active_clicked(final int position, View view) {
@@ -178,6 +237,18 @@ RecyclerView recyclerView ;
            Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
        }
 
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        getUser_adapter.filter(query);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        getUser_adapter.filter(newText);
+        return true;
     }
 
     public class SpacesItemDecoration extends RecyclerView.ItemDecoration {

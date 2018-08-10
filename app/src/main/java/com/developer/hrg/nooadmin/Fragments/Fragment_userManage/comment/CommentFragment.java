@@ -12,12 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.developer.hrg.nooadmin.Fragments.Fragment_userManage.getChanels.Fragment_getAllChanels;
+import com.developer.hrg.nooadmin.Helper.AdminData;
 import com.developer.hrg.nooadmin.Helper.AdminInfo;
 import com.developer.hrg.nooadmin.Helper.ApiInterface;
 import com.developer.hrg.nooadmin.Helper.Client;
 import com.developer.hrg.nooadmin.MainActivity.MainActivity;
 import com.developer.hrg.nooadmin.Models.Admin;
 import com.developer.hrg.nooadmin.Models.Comment;
+import com.developer.hrg.nooadmin.Models.Comment_Read;
 import com.developer.hrg.nooadmin.Models.SimpleResponse;
 import com.developer.hrg.nooadmin.R;
 
@@ -35,22 +38,26 @@ public class CommentFragment extends Fragment implements Comment_adapter.ClickLi
     AdminInfo adminInfo ;
     public static final String CHANEL_ID = "chanel_id";
     public static final String CHANEL_NAME = "chanel_name";
+    public static final String CHANEL_POSITION="position";
 
     int chanel_id  ;
+    int position ;
     String chanel_name ;
     RecyclerView recyclerView;
     ArrayList<Comment> comments=new ArrayList<>();
     Comment_adapter adapter_comment ;
+    AdminData adminData;
 
     public CommentFragment() {
         // Required empty public constructor
     }
 
-    public static CommentFragment getInstance(int chanel_id ,String chanel_name)  {
+    public static CommentFragment getInstance(int chanel_id ,String chanel_name , int positionn)  {
         CommentFragment commentFragment =new CommentFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(CHANEL_ID,chanel_id);
         bundle.putString(CHANEL_NAME,chanel_name);
+        bundle.putInt(CHANEL_POSITION,positionn);
         commentFragment.setArguments(bundle);
         return commentFragment;
 
@@ -63,9 +70,11 @@ public class CommentFragment extends Fragment implements Comment_adapter.ClickLi
         if (getArguments()!=null) {
             chanel_id=getArguments().getInt(CHANEL_ID);
             chanel_name=getArguments().getString(CHANEL_NAME);
+            position=getArguments().getInt(CHANEL_POSITION);
 
         }
         adminInfo=new AdminInfo(getActivity());
+        adminData=new AdminData(getActivity());
         admin=adminInfo.getAdmin();
         adapter_comment=new Comment_adapter(getActivity(),comments);
         adapter_comment.setClickListener(this);
@@ -103,6 +112,9 @@ public class CommentFragment extends Fragment implements Comment_adapter.ClickLi
 
                         comments.addAll(response.body().getComments());
                         adapter_comment.notifyDataSetChanged();
+                        adminData.updateRead(response.body().getComments().size(),chanel_id);
+                        Comment_Read comment_read =new Comment_Read(chanel_id,response.body().getComments().size());
+                        Fragment_getAllChanels.getInstance().updateRead(position,comment_read);
 
                     }
 

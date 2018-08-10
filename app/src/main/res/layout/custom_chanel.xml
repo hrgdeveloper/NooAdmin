@@ -9,7 +9,6 @@
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
         android:layout_alignParentRight="true"
-
         android:layout_marginTop="@dimen/_8sdp"
         android:id="@+id/iv_custom_chanel_photo"
         android:layout_marginRight="@dimen/_8sdp"
@@ -62,17 +61,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="1"
-
         android:gravity="center"
         android:id="@+id/tv_custom_chanel_cm_count"
         android:textStyle="bold"
         android:drawableRight="@drawable/comment"
         android:layout_marginLeft="@dimen/_5sdp"
-
         android:layout_alignBaseline="@+id/tv_custom_chanel_admin"
         android:layout_alignBottom="@+id/tv_custom_chanel_admin"
         android:layout_toEndOf="@+id/tv_custom_chanel_admin"
         android:layout_marginStart="33dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:gravity="center"
+        android:id="@+id/tv_custom_chanel_cm_count_unread"
+        android:textStyle="bold"
+        android:drawableRight="@drawable/comment"
+        android:drawableTint="@android:color/holo_red_dark"
+        android:layout_marginLeft="@dimen/_5sdp"
+        android:layout_alignBaseline="@+id/tv_custom_chanel_admin"
+        android:layout_alignBottom="@+id/tv_custom_chanel_admin"
+        android:layout_toEndOf="@+id/tv_custom_chanel_cm_count"
+        android:layout_marginStart="33dp" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
