@@ -30,9 +30,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.androidnetworking.interfaces.UploadProgressListener;
 import com.developer.hrg.nooadmin.Helper.AdminInfo;
 import com.developer.hrg.nooadmin.Helper.ApiInterface;
 import com.developer.hrg.nooadmin.Helper.Client;
+import com.developer.hrg.nooadmin.Helper.Config;
 import com.developer.hrg.nooadmin.Helper.ImageCompression;
 import com.developer.hrg.nooadmin.Helper.InternetCheck;
 import com.developer.hrg.nooadmin.Helper.MyAlert;
@@ -161,6 +167,9 @@ public class FileFragment extends Fragment implements View.OnClickListener,Progr
 
                 }
 
+
+                
+
                 RequestBody req_content = RequestBody.create(MediaType.parse("text/plain"), jsonObject.toString());
 
             //    ProgressRequestBody fileBody = new ProgressRequestBody(file, this, "multipart/form-data");
@@ -220,6 +229,7 @@ public class FileFragment extends Fragment implements View.OnClickListener,Progr
 
                     }
                 });
+
 
             }
         }

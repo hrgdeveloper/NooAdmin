@@ -35,9 +35,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.androidnetworking.interfaces.UploadProgressListener;
 import com.developer.hrg.nooadmin.Helper.AdminInfo;
 import com.developer.hrg.nooadmin.Helper.ApiInterface;
 import com.developer.hrg.nooadmin.Helper.Client;
+import com.developer.hrg.nooadmin.Helper.Config;
 import com.developer.hrg.nooadmin.Helper.ImageCompression;
 import com.developer.hrg.nooadmin.Helper.InternetCheck;
 import com.developer.hrg.nooadmin.Helper.MyAlert;
@@ -92,7 +98,7 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
     //vase inke
     boolean is_compressing = false ;
 
-
+      boolean okeye = true ;
 
     public VideoFragment() {
         // Required empty public constructor
@@ -116,6 +122,7 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
         admin= adminInfo.getAdmin();
         imageCompression=new ImageCompression(getActivity());
         setHasOptionsMenu(true);
+        AndroidNetworking.initialize(getActivity());
     }
 
     @Override
@@ -178,18 +185,12 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
                     jsonObject.put("admin_id",admin.getAdmin_id());
                     jsonObject.put("message",message.length()==0 ? null : message);
                     jsonObject.put("time",time);
-
-
-
                 } catch (JSONException e) {e.printStackTrace();
 
                 }
-
                 RequestBody req_content = RequestBody.create(MediaType.parse("text/plain"),jsonObject.toString());
-
                 ProgressRequestBody video_body = new ProgressRequestBody(videoFile,this,"video/*");
                 MultipartBody.Part video_part = MultipartBody.Part.createFormData("file",videoFile.getName(),video_body);
-
                 RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"),compressed_thumb);
                 MultipartBody.Part thumb_part = MultipartBody.Part.createFormData("thumb",compressed_thumb.getName(),requestBody);
 
@@ -305,38 +306,51 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null)  {
-
+                  okeye = true;
             Uri selectedVideo = data.getData();
-
           //  final String    realPath=getPath(selectedVideo);
             final String    realPath= RealPathUtil.getPath(getActivity(),selectedVideo);
            File file = new File(realPath);
-            if (file.length()/(1024*1024) <= 15) {
-              videoFile=file;
+            Log.e("TestVideoFile",file.getAbsolutePath());
+
+            if (file.length()/(1024*1024) <= 20) {
+                videoFile=file;
+                try {
+                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                    retriever.setDataSource(getActivity(), Uri.fromFile(videoFile));
+                    time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                    long timeInMillisec = Long.parseLong(time );
+
+                    time = String.format("%02d:%02d ",
+                            TimeUnit.MILLISECONDS.toMinutes(timeInMillisec),
+                            TimeUnit.MILLISECONDS.toSeconds(timeInMillisec) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeInMillisec))
+                    );
+
+                    tv_time.setText(time);
+                    tv_time.setVisibility(View.VISIBLE);
+                }catch (Exception e) {
+                    Toast.makeText(getActivity(), "ویدیو نا معتبر میباشد", Toast.LENGTH_SHORT).show();
+                    videoFile=null;
+                    okeye=false;
+                }
+
+
+
+
             }else {
                 new VideoCompressor(realPath).execute();
             }
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(getActivity(), Uri.fromFile(videoFile));
-            time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            long timeInMillisec = Long.parseLong(time );
-
-            time = String.format("%02d:%02d ",
-                    TimeUnit.MILLISECONDS.toMinutes(timeInMillisec),
-                    TimeUnit.MILLISECONDS.toSeconds(timeInMillisec) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeInMillisec))
-            );
-
-            tv_time.setText(time);
-            tv_time.setVisibility(View.VISIBLE);
 
 
+        if (okeye) {
             Bitmap thumb = ThumbnailUtils.createVideoThumbnail(realPath,
                     MediaStore.Images.Thumbnails.MINI_KIND);
             bitmapToFile(thumb);
             iv_pic.setImageBitmap(thumb);
-
             frameLayout.setBackgroundColor(ContextCompat.getColor(getActivity(),android.R.color.black));
+        }
+
         }
     }
 
@@ -451,24 +465,31 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
 
             progressBar.setVisibility(View.GONE);
             if(compressed){
+                okeye=true;
                 tv_percent.setText("0%");
                 Toast.makeText(getActivity(), "فشرده سازی انجام شد", Toast.LENGTH_SHORT).show();
                 //vase inke check konim bebinim aya qable upload compressesh kamel shode ya na
                 is_compressing=false;
                 videoFile=new File(compressed_path_video);
-                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                retriever.setDataSource(getActivity(), Uri.fromFile(videoFile));
-                 time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-                long timeInMillisec = Long.parseLong(time );
+                try {
+                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                    retriever.setDataSource(getActivity(), Uri.fromFile(videoFile));
+                    time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                    long timeInMillisec = Long.parseLong(time );
 
-                time = String.format("%02d:%02d ",
-                        TimeUnit.MILLISECONDS.toMinutes(timeInMillisec),
-                        TimeUnit.MILLISECONDS.toSeconds(timeInMillisec) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeInMillisec))
-                );
+                    time = String.format("%02d:%02d ",
+                            TimeUnit.MILLISECONDS.toMinutes(timeInMillisec),
+                            TimeUnit.MILLISECONDS.toSeconds(timeInMillisec) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeInMillisec))
+                    );
+                    tv_time.setText(time);
+                    tv_time.setVisibility(View.VISIBLE);
 
-                tv_time.setText(time);
-                tv_time.setVisibility(View.VISIBLE);
+                }catch (Exception e) {
+                    Toast.makeText(getActivity(), "ویدیو نا معتبر میباشد", Toast.LENGTH_SHORT).show();
+                    videoFile=null;
+                    okeye=false;
+                }
 
             }
         }
