@@ -51,6 +51,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -66,7 +67,7 @@ public class PictureFragment extends Fragment implements View.OnClickListener,Pr
     public static final int GALLERY_REQUEST=100;
     public static String CHANEL_PARCABLE = "chanel";
     Chanel chanel ;
-    TextView tv_gallery , tv_send ;
+    TextView tv_gallery , tv_send , tv_label ;
     EditText et_message ;
      File file = null;
     ImageView iv_pic ;
@@ -77,8 +78,18 @@ public class PictureFragment extends Fragment implements View.OnClickListener,Pr
     CoordinatorLayout coordinatorLayout ;
    TextView tv_percent ;
     ImageCompression imageCompression ;
+    boolean uploading = false ;
+    Call<SimpleResponse> callPicture ;
+    private static final String TAG = FileFragment.class.getName();
     public PictureFragment() {
 
+    }
+
+    public void cancelUpload(){
+        callPicture.cancel();
+        tv_send.setText("ارسال");
+        uploading=false;
+        tv_percent.setText("0%");
     }
 
     public static PictureFragment getInstance (Chanel chanel) {
@@ -108,6 +119,7 @@ public class PictureFragment extends Fragment implements View.OnClickListener,Pr
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_picture, container, false);
+        tv_label=(TextView)view.findViewById(R.id.lable_fragment_picture);
         tv_gallery=(TextView)view.findViewById(R.id.tv_pictureFragment_gallery);
         tv_send=(TextView)view.findViewById(R.id.tv_pictureFragment_send);
         et_message=(EditText)view.findViewById(R.id.et_pictureFragment);
@@ -124,6 +136,7 @@ public class PictureFragment extends Fragment implements View.OnClickListener,Pr
         super.onActivityCreated(savedInstanceState);
         tv_gallery.setOnClickListener(this);
         tv_send.setOnClickListener(this);
+        tv_label.setText("کانال "+ chanel.getName());
     }
 
     @Override
@@ -144,82 +157,83 @@ public class PictureFragment extends Fragment implements View.OnClickListener,Pr
 
         }else if (view==tv_send) {
 
-
-            String message = et_message.getText().toString();
-            if (file==null) {
-                MySnack.showSnack(coordinatorLayout,"لطفا ابتدا یک عکس انتخاب نمایید");
-            }else if (!InternetCheck.isOnline(getActivity())) {
-                MySnack.showSnack(coordinatorLayout,"عدم دسترسی به اینترنت .. لطفا وضعیت اینترنت خود را برسی نمایید");
+            if (uploading) {
+                cancelUpload();
             }else {
-                final JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("type",type);
-                    jsonObject.put("admin_id",admin.getAdmin_id());
-                    jsonObject.put("message",message.length()==0 ? null : message);
+                String message = et_message.getText().toString();
+                if (file==null) {
+                    MySnack.showSnack(coordinatorLayout,"لطفا ابتدا یک عکس انتخاب نمایید");
+                }else {
+                    final JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("type",type);
+                        jsonObject.put("admin_id",admin.getAdmin_id());
+                        jsonObject.put("message",message.length()==0 ? null : message);
+
+                    } catch (JSONException e) {e.printStackTrace();
+
+                    }
+                    uploading=true ;
+                    tv_send.setText("لغو ارسال");
+                    String extension = getFileExtension(file);
+                    RequestBody req_content = RequestBody.create(MediaType.parse("text/plain"),jsonObject.toString());
+                    ProgressRequestBody progress_file = new ProgressRequestBody(file,this,"image/"+extension);
+                    MultipartBody.Part file_part = MultipartBody.Part.createFormData("file",file.getName(),progress_file);
+                    ApiInterface api = Client.getClient().create(ApiInterface.class);
+                    callPicture = api.makePictureMessage(admin.getApikey(),Integer.valueOf(chanel.getChanel_id()) ,req_content,file_part);
+                    callPicture.enqueue(new Callback<SimpleResponse>() {
+                        @Override
+                        public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                            if (!response.isSuccessful()) {
+                                try {
+                                    MyAlert.showAlert(getActivity(),"title",response.errorBody().string());
+                                    JSONObject jsonobjectt = new JSONObject(response.errorBody().string());
 
 
+                                    String message = jsonobjectt.getString("message");
+                                    MySnack.showSnack(coordinatorLayout,message);
+                                    cancelUpload();
 
+                                } catch (JSONException e) {
 
-                } catch (JSONException e) {e.printStackTrace();
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
 
-                }
-
-                String extension = getFileExtension(file);
-                RequestBody req_content = RequestBody.create(MediaType.parse("text/plain"),jsonObject.toString());
-                ProgressRequestBody progress_file = new ProgressRequestBody(file,this,"image/"+extension);
-                MultipartBody.Part file_part = MultipartBody.Part.createFormData("file",file.getName(),progress_file);
-                ApiInterface api = Client.getClient().create(ApiInterface.class);
-                Call<SimpleResponse> call = api.makePictureMessage(admin.getApikey(),Integer.valueOf(chanel.getChanel_id()) ,req_content,file_part);
-
-                call.enqueue(new Callback<SimpleResponse>() {
-                    @Override
-                    public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                        if (!response.isSuccessful()) {
-                            try {
-//                                  Log.e("toerror" , "injast");
-//                                  Log.e("toerror",response.raw().message());
-//                                Log.e("toerror",response.errorBody().string());
-
-                              MyAlert.showAlert(getActivity(),"title",response.errorBody().string());
-                                JSONObject jsonobjectt = new JSONObject(response.errorBody().string());
-
-                           //     Log.e("toerror",jsonObject.toString());
-
-                                String message = jsonobjectt.getString("message");
-                                MySnack.showSnack(coordinatorLayout,message);
-
-
-                            } catch (JSONException e) {
-
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-                        }else {
-                            Log.e("tosalem" , "errorNadare");
-                            boolean error = response.body().isError();
-                            String message = response.body().getMessage();
-                            if (!error) {
-
-                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                                getFragmentManager().popBackStack();
                             }else {
+                                Log.e("tosalem" , "errorNadare");
+                                boolean error = response.body().isError();
+                                String message = response.body().getMessage();
+                                if (!error) {
 
-                                Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                    getFragmentManager().popBackStack();
+                                }else {
+                                    cancelUpload();
+                                    Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<SimpleResponse> call, Throwable t) {
-                        Log.e("tomoshkel" , "moshkelDare");
+                        @Override
+                        public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                            if (t instanceof SocketTimeoutException){
+                                Toast.makeText(getActivity(), R.string.timeout , Toast.LENGTH_SHORT).show();
+                            }else if (t instanceof IOException) {
+                                Toast.makeText(getActivity(), R.string.no_internet_connection , Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(getActivity(), R.string.connection_problem , Toast.LENGTH_SHORT).show();
+                                Log.e(TAG,t.getMessage());
+                            }
 
-                      //  Toast.makeText(getActivity(), t.getMessage().toString(), Toast.LENGTH_SHORT).show();
-                        MyAlert.showAlert(getActivity(),"خطا"," خطای "+ "\n" + t.toString() + "\n"+ "لطفا دوباره تلاش کنید");
+                            cancelUpload();
+                        }
+                    });
+            }
 
-                    }
-                });
+
+
 
             }
         }

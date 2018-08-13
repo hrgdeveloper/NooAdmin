@@ -14,13 +14,28 @@
 
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
             android:background="@color/colorPrimary"
             android:id="@+id/toolbar_audio"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
             app:theme="@style/ThemeOverlay.AppCompat.Dark"
 
             >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/lable_fragment_audio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="نور المبین"
+                android:textColor="@android:color/white"
+
+                android:textStyle="bold" />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -35,7 +50,7 @@
                     android:layout_marginRight="@dimen/_5sdp"
                     android:textColor="@android:color/white"
                     android:layout_centerVertical="true"
-                    android:drawableLeft="@android:drawable/ic_menu_camera"
+                    android:drawableLeft="@drawable/muisc"
                     android:gravity="center"
                     android:drawableTint="@android:color/white"
                     />
@@ -51,19 +66,22 @@
                     android:layout_centerVertical="true"
                     android:drawableLeft="@drawable/tick"
                     android:gravity="center"
-                    android:drawableTint="@android:color/white"
+
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0%"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/download_percent"
                     android:layout_centerVertical="true"
                     android:id="@+id/tv_audio_percent"
                     android:textColor="@android:color/white"
                     />
+
             </RelativeLayout>
 
-
+   </LinearLayout>
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 <android.support.constraint.ConstraintLayout

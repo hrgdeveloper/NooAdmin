@@ -82,7 +82,7 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
     public static final int GALLERY_REQUEST=100;
     public static String CHANEL_PARCABLE = "chanel";
     Chanel chanel ;
-    TextView tv_gallery , tv_send  , tv_time;
+    TextView tv_gallery , tv_send  , tv_time ,tv_label;
     EditText et_message ;
     File videoFile = null , compressed_thumb =null;
     ImageView iv_pic ;
@@ -130,7 +130,8 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_video, container, false);
-         tv_time=(TextView)view.findViewById(R.id.tv_time);
+        tv_label=(TextView)view.findViewById(R.id.lable_fragment_video);
+        tv_time=(TextView)view.findViewById(R.id.tv_time);
         tv_gallery=(TextView)view.findViewById(R.id.tv_videoFragment_gallery);
         tv_send=(TextView)view.findViewById(R.id.tv_videoFragment_send);
         et_message=(EditText)view.findViewById(R.id.et_VideoFragment);
@@ -147,6 +148,7 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
         super.onActivityCreated(savedInstanceState);
         tv_gallery.setOnClickListener(this);
         tv_send.setOnClickListener(this);
+        tv_label.setText("کانال "+ chanel.getName());
     }
 
     @Override

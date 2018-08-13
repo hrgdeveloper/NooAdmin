@@ -13,57 +13,73 @@
         app:theme="@style/ThemeOverlay.AppCompat.Light">
 
         <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
             android:id="@+id/toolbar_picture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
             app:theme="@style/ThemeOverlay.AppCompat.Dark"
-
             >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/lable_fragment_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="نور المبین"
+                android:textColor="@android:color/white"
+
+                android:textStyle="bold" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="match_parent">
+
                 <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tv_videoFragment_gallery"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="انتخاب ویدیو"
-                    android:id="@+id/tv_videoFragment_gallery"
-                    android:textStyle="bold"
-                    android:layout_marginRight="@dimen/_5sdp"
-                    android:textColor="@android:color/white"
                     android:layout_centerVertical="true"
-                    android:drawableLeft="@android:drawable/ic_menu_camera"
-                    android:gravity="center"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:drawableLeft="@drawable/gallery"
                     android:drawableTint="@android:color/white"
-                    />
+                    android:gravity="center"
+                    android:text="انتخاب ویدیو"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
                 <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tv_videoFragment_send"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
-                    android:text="ارسال"
-                    android:layout_toStartOf="@+id/tv_videoFragment_gallery"
-                    android:id="@+id/tv_videoFragment_send"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="@dimen/_10sdp"
-                    android:textColor="@android:color/white"
                     android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:layout_toStartOf="@+id/tv_videoFragment_gallery"
                     android:drawableStart="@drawable/tick"
                     android:gravity="center"
-                    android:drawableTint="@android:color/white"
-                    />
+                    android:text="ارسال"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
                 <TextView
+                    android:id="@+id/tv_VideoFragment_percent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0%"
                     android:layout_centerVertical="true"
-                    android:id="@+id/tv_VideoFragment_percent"
+                    android:text="0%"
                     android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/download_percent"
                     />
             </RelativeLayout>
-
+        </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -109,8 +125,6 @@
                 android:visibility="gone"
                 />
         </FrameLayout>
-
-
         <EditText
             android:id="@+id/et_VideoFragment"
             android:layout_width="match_parent"

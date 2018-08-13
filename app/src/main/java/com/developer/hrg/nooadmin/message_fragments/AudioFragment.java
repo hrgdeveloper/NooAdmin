@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.developer.hrg.nooadmin.Fragments.Fragment_userManage.makeChanel.Fragment_makeChanel;
 import com.developer.hrg.nooadmin.Helper.AdminInfo;
 import com.developer.hrg.nooadmin.Helper.ApiInterface;
 import com.developer.hrg.nooadmin.Helper.Client;
@@ -49,6 +50,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
@@ -67,7 +69,7 @@ public class AudioFragment extends Fragment implements View.OnClickListener,Prog
     public static final int ADUIO_GALLERY_REQUEST=100;
     public static String CHANEL_PARCABLE = "chanel";
     Chanel chanel ;
-    TextView tv_audio_gallery , tv_send  , tv_time , tv_percent , tv_size , tv_name;
+    TextView tv_audio_gallery , tv_send  , tv_time , tv_percent , tv_size , tv_name , tv_label;
     Button btn_type ;
     EditText et_text ;
     Admin admin ;
@@ -76,6 +78,9 @@ public class AudioFragment extends Fragment implements View.OnClickListener,Prog
     File audiFile = null ;
     AdminInfo adminInfo ;
     CoordinatorLayout coordinatorLayout ;
+    Call<SimpleResponse> callAudio ;
+    boolean uploading = false ;
+    private static final String TAG = AudioFragment.class.getName();
     public AudioFragment() {
         // Required empty public constructor
     }
@@ -95,7 +100,6 @@ public class AudioFragment extends Fragment implements View.OnClickListener,Prog
         }
         adminInfo=new AdminInfo(getActivity());
         admin= adminInfo.getAdmin();
-
         setHasOptionsMenu(true);
     }
 
@@ -108,7 +112,7 @@ public class AudioFragment extends Fragment implements View.OnClickListener,Prog
         tv_send=(TextView)view.findViewById(R.id.tv_audioFragment_send);
         tv_time=(TextView)view.findViewById(R.id.tv_time_audio);
         tv_percent=(TextView)view.findViewById(R.id.tv_audio_percent);
-
+        tv_label=(TextView)view.findViewById(R.id.lable_fragment_audio);
         tv_size=(TextView)view.findViewById(R.id.tv_audio_size);
         tv_name=(TextView)view.findViewById(R.id.tv_audio_name);
         btn_type=(Button)view.findViewById(R.id.btn_type_audio);
@@ -122,12 +126,14 @@ public class AudioFragment extends Fragment implements View.OnClickListener,Prog
         super.onActivityCreated(savedInstanceState);
         tv_audio_gallery.setOnClickListener(this);
         tv_send.setOnClickListener(this);
+        tv_label.setText("کانال "+ chanel.getName());
     }
 
     @Override
     public void onResume() {
         super.onResume();
         ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((MainActivity)getActivity()).setToolbarText("تست میکنییییم");
     }
 
     @Override
@@ -137,93 +143,97 @@ public class AudioFragment extends Fragment implements View.OnClickListener,Prog
                 requestPremission(Manifest.permission.WRITE_EXTERNAL_STORAGE,ADUIO_GALLERY_REQUEST);
             }else {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-//                intent_upload.setType("audio/mp3");
-//                intent_upload.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(intent,ADUIO_GALLERY_REQUEST);
             }
 
         }else if (view==tv_send) {
-            String message = et_text.getText().toString();
-         if (audiFile == null) {
-                MySnack.showSnack(coordinatorLayout, "لطفا ابتدا یک ویدیو انتخاب نمایید");
-            } else if (!InternetCheck.isOnline(getActivity())) {
-                MySnack.showSnack(coordinatorLayout, "عدم دسترسی به اینترنت .. لطفا وضعیت اینترنت خود را برسی نمایید");
-            } else {
-                final JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("type", type);
-                    jsonObject.put("admin_id", admin.getAdmin_id());
-                    jsonObject.put("message", message.length() == 0 ? null : message);
-                    jsonObject.put("time", time);
-                    jsonObject.put("filename", filename);
+            if (uploading) {
+              cancelUpload();
+            }else {
+                String message = et_text.getText().toString();
+                if (audiFile == null) {
+                    MySnack.showSnack(coordinatorLayout, "لطفا ابتدا یک ویدیو انتخاب نمایید");
+                } else if (!InternetCheck.isOnline(getActivity())) {
+                    MySnack.showSnack(coordinatorLayout, "عدم دسترسی به اینترنت .. لطفا وضعیت اینترنت خود را برسی نمایید");
+                } else {
+                    final JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("type", type);
+                        jsonObject.put("admin_id", admin.getAdmin_id());
+                        jsonObject.put("message", message.length() == 0 ? null : message);
+                        jsonObject.put("time", time);
+                        jsonObject.put("filename", filename);
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
 
-                }
+                    }
+                    uploading=true;
+                    tv_send.setText("لغو ارسال");
 
-                RequestBody req_content = RequestBody.create(MediaType.parse("text/plain"), jsonObject.toString());
+                    RequestBody req_content = RequestBody.create(MediaType.parse("text/plain"), jsonObject.toString());
+                    ProgressRequestBody audioBody = new ProgressRequestBody(audiFile, this, "audio/*");
+                    MultipartBody.Part audioPart = MultipartBody.Part.createFormData("file", audiFile.getName(), audioBody);
+                    ApiInterface api = Client.getClient().create(ApiInterface.class);
+                    callAudio = api.makeAudioMessage(admin.getApikey(), Integer.valueOf(chanel.getChanel_id()), req_content,audioPart
+                    );
+                    callAudio.enqueue(new Callback<SimpleResponse>() {
+                        @Override
+                        public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                            if (!response.isSuccessful()) {
+                                try {
 
-                ProgressRequestBody audioBody = new ProgressRequestBody(audiFile, this, "audio/*");
-                MultipartBody.Part audioPart = MultipartBody.Part.createFormData("file", audiFile.getName(), audioBody);
+                                    JSONObject jsonobjectt = new JSONObject(response.errorBody().string());
+                                    String message = jsonobjectt.getString("message");
+                                    MySnack.showSnack(coordinatorLayout, message);
+                                    cancelUpload();
 
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
 
-
-                ApiInterface api = Client.getClient().create(ApiInterface.class);
-                Call<SimpleResponse> call = api.makeAudioMessage(admin.getApikey(), Integer.valueOf(chanel.getChanel_id()), req_content,audioPart
-                );
-
-                call.enqueue(new Callback<SimpleResponse>() {
-                    @Override
-                    public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                        if (!response.isSuccessful()) {
-                            try {
-//                                  Log.e("toerror" , "injast");
-//                                  Log.e("toerror",response.raw().message());
-//                                Log.e("toerror",response.errorBody().string());
-
-                                JSONObject jsonobjectt = new JSONObject(response.errorBody().string());
-
-                                //     Log.e("toerror",jsonObject.toString());
-
-                                String message = jsonobjectt.getString("message");
-                                MySnack.showSnack(coordinatorLayout, message);
-
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-                        } else {
-
-                            boolean error = response.body().isError();
-                            String message = response.body().getMessage();
-                            if (!error) {
-
-                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                                getFragmentManager().popBackStack();
                             } else {
 
-                                Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                boolean error = response.body().isError();
+                                String message = response.body().getMessage();
+                                if (!error) {
+
+                                    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                    getFragmentManager().popBackStack();
+                                } else {
+                                   cancelUpload();
+                                    Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<SimpleResponse> call, Throwable t) {
-                        Log.e("tomoshkel", "moshkelDare");
+                        @Override
+                        public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                            Log.e("tomoshkel", "moshkelDare");
+                            if (t instanceof SocketTimeoutException){
+                                Toast.makeText(getActivity(), R.string.timeout , Toast.LENGTH_SHORT).show();
+                            }else if (t instanceof IOException) {
+                                Toast.makeText(getActivity(), R.string.no_internet_connection , Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(getActivity(), R.string.connection_problem , Toast.LENGTH_SHORT).show();
+                                Log.e(TAG,t.getMessage());
+                            }
 
-                        //  Toast.makeText(getActivity(), t.getMessage().toString(), Toast.LENGTH_SHORT).show();
-                        MyAlert.showAlert(getActivity(), "خطا", " خطای " + "\n" + t.toString() + "\n" + "لطفا دوباره تلاش کنید");
+                           cancelUpload();
 
-                    }
-                });
+
+                        }
+                    });
+            }
+
+
 
             }
         }
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -261,6 +271,13 @@ public class AudioFragment extends Fragment implements View.OnClickListener,Prog
         final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
         int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
         return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
+    public void cancelUpload(){
+        callAudio.cancel();
+        tv_send.setText("ارسال");
+        uploading=false;
+        tv_percent.setText("0%");
     }
 
 

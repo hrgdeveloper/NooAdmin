@@ -7,65 +7,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.developer.hrg.nooadmin.message_fragments.PictureFragment">
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:theme="@style/ThemeOverlay.AppCompat.Light">
 
-        <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            android:id="@+id/toolbar_file"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark"
-
-            >
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
-                <android.support.v7.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:text="انتخاب فایل "
-                    android:id="@+id/tv_fileFragment_gallery"
-                    android:textStyle="bold"
-                    android:layout_marginRight="@dimen/_5sdp"
-                    android:textColor="@android:color/white"
-                    android:layout_centerVertical="true"
-                    android:drawableLeft="@android:drawable/ic_menu_camera"
-                    android:gravity="center"
-                    android:drawableTint="@android:color/white"
-                    />
-                <android.support.v7.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ارسال"
-                    android:layout_toLeftOf="@+id/tv_fileFragment_gallery"
-                    android:id="@+id/tv_fileFragment_send"
-                    android:textStyle="bold"
-                    android:layout_marginRight="@dimen/_10sdp"
-                    android:textColor="@android:color/white"
-                    android:layout_centerVertical="true"
-                    android:drawableLeft="@drawable/tick"
-                    android:gravity="center"
-                    android:drawableTint="@android:color/white"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0%"
-                    android:layout_centerVertical="true"
-                    android:id="@+id/tv_file_percent"
-                    android:textColor="@android:color/white"
-                    />
-            </RelativeLayout>
-
-
-        </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -133,4 +75,83 @@
 
 
     </android.support.constraint.ConstraintLayout>
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:theme="@style/ThemeOverlay.AppCompat.Light">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_file"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark"
+
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/lable_fragment_file"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="نور المبین"
+                    android:textColor="@android:color/white"
+
+                    android:textStyle="bold" />
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_fileFragment_gallery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/_5sdp"
+                        android:drawableLeft="@drawable/file"
+                        android:drawableTint="@android:color/white"
+                        android:gravity="center"
+                        android:text="انتخاب فایل "
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_fileFragment_send"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:drawableLeft="@drawable/tick"
+                        android:gravity="center"
+                        android:text="ارسال"
+                        android:textColor="@android:color/white"
+                        android:layout_alignParentTop="true"
+                        android:layout_toStartOf="@+id/tv_fileFragment_gallery"
+                        android:layout_marginEnd="15dp" />
+
+                    <TextView
+                        android:id="@+id/tv_file_percent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0%"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/download_percent"
+                        android:textStyle="bold"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentStart="true" />
+                </RelativeLayout>
+
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
 </android.support.design.widget.CoordinatorLayout>

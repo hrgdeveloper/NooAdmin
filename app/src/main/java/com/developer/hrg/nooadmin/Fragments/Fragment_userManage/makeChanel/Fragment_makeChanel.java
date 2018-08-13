@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.developer.hrg.nooadmin.Fragments.Fragment_userManage.getChanels.Fragment_getAllChanels;
 import com.developer.hrg.nooadmin.Helper.AdminInfo;
 import com.developer.hrg.nooadmin.Helper.ApiInterface;
 import com.developer.hrg.nooadmin.Helper.Client;
@@ -42,7 +44,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -55,7 +59,7 @@ import retrofit2.Response;
  */
 public class Fragment_makeChanel extends Fragment implements View.OnClickListener {
   TextView tv_sabt ;
-    ImageView iv_pic_image , iv_back ;
+    ImageView   iv_back ;
     EditText et_name , et_desc ;
     public final int GALLERY_REQUEST = 100 ;
     public final int  RESULT_LOAD_IMG_Gallery = 101 ;
@@ -63,7 +67,8 @@ public class Fragment_makeChanel extends Fragment implements View.OnClickListene
     File picFile = null ;
     AdminInfo adminIngo ;
     Admin admin ;
-
+    CircleImageView iv_pic_image ;
+    private static final String TAG = Fragment_makeChanel.class.getName();
     public Fragment_makeChanel() {
         // Required empty public constructor
     }
@@ -85,7 +90,7 @@ public class Fragment_makeChanel extends Fragment implements View.OnClickListene
         Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbar_mChanel);
         tv_sabt=(TextView)toolbar.findViewById(R.id.tv_mChenl_sabt);
         iv_back=(ImageView)toolbar.findViewById(R.id.iv_mChanel_back);
-        iv_pic_image=(ImageView)view.findViewById(R.id.iv_chanel_photo);
+        iv_pic_image=(CircleImageView) view.findViewById(R.id.iv_chanel_photo);
         et_name=(EditText)view.findViewById(R.id.et_chanel_name);
         et_desc=(EditText)view.findViewById(R.id.et_chanel_desc);
         imageCompression=new ImageCompression(getActivity());
@@ -125,8 +130,7 @@ public class Fragment_makeChanel extends Fragment implements View.OnClickListene
                 Toast.makeText(getActivity(),"لطفا توضیحات کانال را وارد نمایید",Toast.LENGTH_LONG).show();
             }else if (picFile==null) {
                 Toast.makeText(getActivity(),"لطفا یک تصویر برای کانال انتخاب نمایید",Toast.LENGTH_LONG).show();
-            }else if (!InternetCheck.isOnline(getActivity())) {
-                Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+
             }else {
                 MyProgress.showProgress(getActivity(),"در حال ساخت کانال");
                 JSONObject jsonobject = new JSONObject();
@@ -174,8 +178,14 @@ public class Fragment_makeChanel extends Fragment implements View.OnClickListene
                     @Override
                     public void onFailure(Call<SimpleResponse> call, Throwable t) {
                         MyProgress.cancelProgress();
-                        Toast.makeText(getActivity(), t.getMessage().toString(), Toast.LENGTH_SHORT).show();
-                        MyAlert.showAlert(getActivity(),"خطا"," خطای "+ "\n" + t.getMessage().toString() + "\n"+ "لطفا دوباره تلاش کنید");
+                        if (t instanceof SocketTimeoutException){
+                            Toast.makeText(getActivity(), R.string.timeout , Toast.LENGTH_SHORT).show();
+                        }else if (t instanceof IOException) {
+                            Toast.makeText(getActivity(), R.string.no_internet_connection , Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(getActivity(), R.string.connection_problem , Toast.LENGTH_SHORT).show();
+                            Log.e(TAG,t.getMessage());
+                        }
 
                     }
                 });

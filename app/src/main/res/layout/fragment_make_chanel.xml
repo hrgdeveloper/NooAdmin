@@ -80,7 +80,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
 
                     android:id="@+id/iv_chanel_photo"
                     android:layout_width="@dimen/_60sdp"

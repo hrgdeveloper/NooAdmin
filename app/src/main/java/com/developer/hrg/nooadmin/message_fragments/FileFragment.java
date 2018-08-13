@@ -56,6 +56,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
@@ -74,7 +75,7 @@ public class FileFragment extends Fragment implements View.OnClickListener,Progr
     public static final int FILE_REQUEST=100;
     public static String CHANEL_PARCABLE = "chanel";
     Chanel chanel ;
-    TextView tv_file_gallery , tv_send   , tv_percent , tv_size , tv_name;
+    TextView tv_file_gallery , tv_send   , tv_percent , tv_size , tv_name , tv_label;
     Button btn_type ;
     EditText et_text ;
     Admin admin ;
@@ -83,9 +84,20 @@ public class FileFragment extends Fragment implements View.OnClickListener,Progr
     File file = null ;
     AdminInfo adminInfo ;
     CoordinatorLayout coordinatorLayout ;
+    boolean uploading = false ;
+    Call<SimpleResponse> callFile ;
+    private static final String TAG = FileFragment.class.getName();
     public FileFragment() {
         // Required empty public constructor
     }
+
+    public void cancelUpload(){
+        callFile.cancel();
+        tv_send.setText("ارسال");
+        uploading=false;
+        tv_percent.setText("0%");
+    }
+
 
     public static FileFragment getInstance (Chanel chanel) {
         FileFragment fileFragment = new FileFragment();
@@ -113,7 +125,7 @@ public class FileFragment extends Fragment implements View.OnClickListener,Progr
         View view = inflater.inflate(R.layout.fragment_file, container, false);
         tv_file_gallery=(TextView)view.findViewById(R.id.tv_fileFragment_gallery);
         tv_send=(TextView)view.findViewById(R.id.tv_fileFragment_send);
-
+        tv_label=(TextView)view.findViewById(R.id.lable_fragment_file);
         tv_percent=(TextView)view.findViewById(R.id.tv_file_percent);
 
         tv_size=(TextView)view.findViewById(R.id.tv_file_size);
@@ -129,6 +141,7 @@ public class FileFragment extends Fragment implements View.OnClickListener,Progr
         super.onActivityCreated(savedInstanceState);
         tv_file_gallery.setOnClickListener(this);
         tv_send.setOnClickListener(this);
+        tv_label.setText("کانال "+ chanel.getName());
     }
 
     @Override
@@ -149,86 +162,89 @@ public class FileFragment extends Fragment implements View.OnClickListener,Progr
             }
 
         }else if (view==tv_send) {
-            String message = et_text.getText().toString();
-            if (file == null) {
-                MySnack.showSnack(coordinatorLayout, "لطفا ابتدا یک ویدیو انتخاب نمایید");
-            } else if (!InternetCheck.isOnline(getActivity())) {
-                MySnack.showSnack(coordinatorLayout, "عدم دسترسی به اینترنت .. لطفا وضعیت اینترنت خود را برسی نمایید");
-            } else {
-                final JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("type", type);
-                    jsonObject.put("admin_id", admin.getAdmin_id());
-                    jsonObject.put("message", message.length() == 0 ? null : message);
-                    jsonObject.put("filename", filename);
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            if (uploading) {
+                cancelUpload();
+            }else {
+                String message = et_text.getText().toString();
+                if (file == null) {
+                    MySnack.showSnack(coordinatorLayout, "لطفا ابتدا یک ویدیو انتخاب نمایید");
 
-                }
+                } else {
+                    final JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("type", type);
+                        jsonObject.put("admin_id", admin.getAdmin_id());
+                        jsonObject.put("message", message.length() == 0 ? null : message);
+                        jsonObject.put("filename", filename);
 
+                    } catch (JSONException e) {
+                        e.printStackTrace();
 
-                
-
-                RequestBody req_content = RequestBody.create(MediaType.parse("text/plain"), jsonObject.toString());
-
-            //    ProgressRequestBody fileBody = new ProgressRequestBody(file, this, "multipart/form-data");
-                ProgressRequestBody fileBody = new ProgressRequestBody(file, this, "file/*");
-                MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", file.getName(), fileBody);
+                    }
+                    uploading=true;
+                    tv_send.setText("لغو ارسال");
 
 
+                    RequestBody req_content = RequestBody.create(MediaType.parse("text/plain"), jsonObject.toString());
+                    //    ProgressRequestBody fileBody = new ProgressRequestBody(file, this, "multipart/form-data");
+                    ProgressRequestBody fileBody = new ProgressRequestBody(file, this, "file/*");
+                    MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", file.getName(), fileBody);
 
-                ApiInterface api = Client.getClient().create(ApiInterface.class);
-                Call<SimpleResponse> call = api.makeFileMessage(admin.getApikey(), Integer.valueOf(chanel.getChanel_id()), req_content,filePart
-                );
+                    ApiInterface api = Client.getClient().create(ApiInterface.class);
+                    callFile = api.makeFileMessage(admin.getApikey(), Integer.valueOf(chanel.getChanel_id()), req_content,filePart
+                    );
 
-                call.enqueue(new Callback<SimpleResponse>() {
-                    @Override
-                    public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                        if (!response.isSuccessful()) {
-                            try {
-//                                  Log.e("toerror" , "injast");
-//                                  Log.e("toerror",response.raw().message());
-//                                Log.e("toerror",response.errorBody().string());
+                    callFile.enqueue(new Callback<SimpleResponse>() {
+                        @Override
+                        public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                            if (!response.isSuccessful()) {
+                                try {
+;
 
-                                JSONObject jsonobjectt = new JSONObject(response.errorBody().string());
+                                    JSONObject jsonobjectt = new JSONObject(response.errorBody().string());
+                                    String message = jsonobjectt.getString("message");
+                                    MySnack.showSnack(coordinatorLayout, message);
+                                    cancelUpload();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
 
-                                //     Log.e("toerror",jsonObject.toString());
-
-                                String message = jsonobjectt.getString("message");
-                                MySnack.showSnack(coordinatorLayout, message);
-
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-                        } else {
-
-                            boolean error = response.body().isError();
-                            String message = response.body().getMessage();
-                            if (!error) {
-
-                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                                getFragmentManager().popBackStack();
                             } else {
 
-                                Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                boolean error = response.body().isError();
+                                String message = response.body().getMessage();
+                                if (!error) {
+
+                                    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                    getFragmentManager().popBackStack();
+                                } else {
+                                    cancelUpload();
+                                    Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<SimpleResponse> call, Throwable t) {
-                        Log.e("tomoshkel", "moshkelDare");
+                        @Override
+                        public void onFailure(Call<SimpleResponse> call, Throwable t) {
 
-                        //  Toast.makeText(getActivity(), t.getMessage().toString(), Toast.LENGTH_SHORT).show();
-                        MyAlert.showAlert(getActivity(), "خطا", " خطای " + "\n" + t.toString() + "\n" + "لطفا دوباره تلاش کنید");
 
-                    }
-                });
+                            if (t instanceof SocketTimeoutException){
+                                Toast.makeText(getActivity(), R.string.timeout , Toast.LENGTH_SHORT).show();
+                            }else if (t instanceof IOException) {
+                                Toast.makeText(getActivity(), R.string.no_internet_connection , Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(getActivity(), R.string.connection_problem , Toast.LENGTH_SHORT).show();
+                                Log.e(TAG,t.getMessage());
+                            }
+
+                            cancelUpload();
+
+                        }
+                    });
+            }
 
 
             }
