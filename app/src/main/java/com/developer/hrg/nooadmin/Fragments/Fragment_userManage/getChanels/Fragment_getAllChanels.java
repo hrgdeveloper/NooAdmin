@@ -4,6 +4,7 @@ package com.developer.hrg.nooadmin.Fragments.Fragment_userManage.getChanels;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -17,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +28,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -40,7 +44,9 @@ import com.developer.hrg.nooadmin.Helper.InternetCheck;
 import com.developer.hrg.nooadmin.Helper.MyAlert;
 import com.developer.hrg.nooadmin.Helper.MyProgress;
 import com.developer.hrg.nooadmin.MainActivity.MainActivity;
+import com.developer.hrg.nooadmin.Models.Admin;
 import com.developer.hrg.nooadmin.Models.Chanel;
+import com.developer.hrg.nooadmin.Models.Comment;
 import com.developer.hrg.nooadmin.Models.Comment_Read;
 import com.developer.hrg.nooadmin.Models.SimpleResponse;
 import com.developer.hrg.nooadmin.R;
@@ -87,6 +93,7 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
 
    // LinearLayoutManager linearLayoutManager ;
     AdminInfo adminInfo ;
+    Admin admin ;
     public static final int GALLERY_REQUEST_FOR_UPDATE_PROFILE = 101 ;
     public static final int GALLERY_REQUEST_FOR_ADD_PROFILE= 102 ;
     public Fragment_getAllChanels() {
@@ -104,6 +111,7 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
         }
         adapter_chanels=new GetChanelsAdapter(getActivity(),chanels,comment_reads);
         adminInfo=new AdminInfo(getActivity());
+        admin=adminInfo.getAdmin();
         imageCompression=new ImageCompression(getActivity());
 
     }
@@ -254,6 +262,90 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
                     }else if (item.getItemId()==R.id.menu_get_profiles) {
                         openFragment(Profile_Fragment.getInstance(Integer.valueOf( chanels.get(position).getChanel_id())),true);
 
+                    }else if (item.getItemId()==R.id.menu_update_chanel) {
+
+                        AlertDialog.Builder builder;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_Material_Light_Dialog_Alert);
+                        } else {
+                            builder = new AlertDialog.Builder(getActivity());
+                        }
+
+                        final AlertDialog test = builder.create();
+                        View update_view = getLayoutInflater().inflate(R.layout.dialog_chanel_update,null);
+                        test.setView(update_view);
+                        final EditText et_name = (EditText)update_view.findViewById(R.id.et_chanel_name_update);
+                        final EditText et_des = (EditText)update_view.findViewById(R.id.et_chanel_des_update);
+                        Button btn_update = (Button)update_view.findViewById(R.id.btn_update_chanel);
+                        Button btn_cancel = (Button)update_view.findViewById(R.id.btn_cancel_update);
+                        et_name.setText(chanels.get(position).getName());
+                        et_des.setText(chanels.get(position).getDescription());
+
+                        btn_update.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                final String name = et_name.getText().toString();
+                                final String des = et_des.getText().toString();
+                                if (name.isEmpty() || des.isEmpty()) {
+                                    Toast.makeText(getActivity(), "نام و توضیحات نمیتواند خالی بماند", Toast.LENGTH_SHORT).show();
+                                }else {
+                                    ApiInterface api = Client.getClient().create(ApiInterface.class);
+                                    Call<SimpleResponse> call_comments = api.updateChanel(admin.getApikey(),
+                                            Integer.valueOf(chanels.get(position).getChanel_id()),name,des
+                                            );
+                                    call_comments.enqueue(new Callback<SimpleResponse>() {
+                                        @Override
+                                        public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                                            if (!response.isSuccessful()) {
+                                                Toast.makeText(getActivity(), "خطایی پیش آمده دوباره تلاش کنید", Toast.LENGTH_SHORT).show();
+                                            }else  {
+                                                if (response.body().isError()) {
+                                                    Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                                }else {
+
+                                                    chanels.get(position).setName(name);
+                                                    chanels.get(position).setDescription(des);
+                                                    Toast.makeText(getActivity(),response.body().getMessage() , Toast.LENGTH_SHORT).show();
+                                                    adapter_chanels.notifyDataSetChanged();
+                                                    test.dismiss();
+                                                }
+
+
+
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                                            if (t instanceof SocketTimeoutException){
+                                                Toast.makeText(getActivity(), R.string.timeout , Toast.LENGTH_SHORT).show();
+                                            }else if (t instanceof IOException) {
+                                                Toast.makeText(getActivity(), R.string.no_internet_connection , Toast.LENGTH_SHORT).show();
+                                            }else {
+                                                Toast.makeText(getActivity(), R.string.connection_problem , Toast.LENGTH_SHORT).show();
+                                                Log.e(TAG,t.getMessage());
+                                            }
+                                        }
+                                    });
+                                }
+
+
+                            }
+                        });
+                        btn_cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                test.dismiss();
+                            }
+                        });
+                    test.show();
+
+
+
+
+
+
                     }
 
                 return false;
@@ -266,7 +358,7 @@ public class Fragment_getAllChanels extends Fragment implements GetChanelsAdapte
 
     @Override
     public void chanel_long_clicked(final int position, View view) {
-        Toast.makeText(getActivity(), chanels.get(position).getCm_count()+" ", Toast.LENGTH_SHORT).show();
+
 
     }
 

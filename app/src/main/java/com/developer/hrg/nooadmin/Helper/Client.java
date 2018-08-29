@@ -21,11 +21,11 @@ public class Client {
             Gson gson = new GsonBuilder().setLenient().create();
             final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .connectTimeout(15, TimeUnit.SECONDS)
-                    .writeTimeout(90, TimeUnit.MINUTES)
-                    .readTimeout(90, TimeUnit.MINUTES)
+                    .writeTimeout(1, TimeUnit.MINUTES)
+                    .readTimeout(1, TimeUnit.MINUTES)
                     .build();
             retrofit=new Retrofit.Builder()
-                    .baseUrl(Config.OFFLINE_URL)
+                    .baseUrl(Config.ONLINE_URL_FINAL)
                     .client(okHttpClient)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create(gson))

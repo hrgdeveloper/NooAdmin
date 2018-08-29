@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.developer.hrg.nooadmin.Helper.AdminInfo;
 import com.developer.hrg.nooadmin.Helper.ApiInterface;
 import com.developer.hrg.nooadmin.Helper.Client;
+import com.developer.hrg.nooadmin.Helper.Config;
 import com.developer.hrg.nooadmin.Helper.ImageCompression;
 import com.developer.hrg.nooadmin.Helper.InternetCheck;
 import com.developer.hrg.nooadmin.Helper.MyAlert;
@@ -195,7 +196,7 @@ public class PictureFragment extends Fragment implements View.OnClickListener,Pr
                                     cancelUpload();
 
                                 } catch (JSONException e) {
-
+                                    Toast.makeText(getActivity(), R.string.badResponseException, Toast.LENGTH_SHORT).show();
                                     e.printStackTrace();
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -207,8 +208,16 @@ public class PictureFragment extends Fragment implements View.OnClickListener,Pr
                                 String message = response.body().getMessage();
                                 if (!error) {
 
-                                    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                                    getFragmentManager().popBackStack();
+                                    if (!Config.isAppIsInBackground(getActivity())) {
+                                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                        getFragmentManager().popBackStack();
+                                    }else {
+                                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                        tv_percent.setText(0+" %");
+                                        file=null;
+                                        tv_send.setText("ارسال");
+                                    }
+
                                 }else {
                                     cancelUpload();
                                     Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +67,7 @@ public class NewAdminFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_new_admin, container, false);
         et_username=(EditText)view.findViewById(R.id.et_username_newAdmin);
         et_password=(EditText)view.findViewById(R.id.et_password_newAdmin);
+
         btn_register=(Button)view.findViewById(R.id.btn_register_newAdmin);
         coordinatorLayout=(CoordinatorLayout)view.findViewById(R.id.coordinate_newAdmin);
         return view;
@@ -73,6 +76,7 @@ public class NewAdminFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        et_username.setFilters(new InputFilter[]{getUsernameFilter()});
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,5 +148,21 @@ public class NewAdminFragment extends Fragment {
     public void onResume() {
         super.onResume();
         ((MainActivity)getActivity()).setToolbarText("ساخت مدیریت ");
+    }
+
+    public InputFilter getUsernameFilter() {
+        InputFilter filter = new InputFilter() {
+            public CharSequence filter(CharSequence source, int start, int end,
+                                       Spanned dest, int dstart, int dend) {
+                for (int i = start; i < end; i++) {
+                    if (Character.isWhitespace(source.charAt(i))) {
+                        return "";
+                    }
+                }
+                return null;
+            }
+
+        };
+        return filter;
     }
 }

@@ -13,6 +13,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +24,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.developer.hrg.nooadmin.Fragments.Fragment_userManage.makeChanel.Fragment_makeChanel;
 import com.developer.hrg.nooadmin.Helper.AdminInfo;
 import com.developer.hrg.nooadmin.Helper.ApiInterface;
 import com.developer.hrg.nooadmin.Helper.Client;
 import com.developer.hrg.nooadmin.Helper.InternetCheck;
+import com.developer.hrg.nooadmin.Helper.MyProgress;
 import com.developer.hrg.nooadmin.Models.Admin;
 import com.developer.hrg.nooadmin.Models.Chanel;
 import com.developer.hrg.nooadmin.Models.Profile;
@@ -35,6 +38,8 @@ import com.developer.hrg.nooadmin.R;
 import com.developer.hrg.nooadmin.message_fragments.AudioFragment;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -60,6 +65,7 @@ public class Profile_Fragment extends Fragment implements View.OnClickListener {
     Adapter_Profile adapter_profile ;
     NetworkChangeReceiver networkChanereciver ;
     boolean firstTime = true;
+    private static final String TAG = Profile_Fragment.class.getName();
     public Profile_Fragment() {
         // Required empty public constructor
     }
@@ -193,13 +199,25 @@ public class Profile_Fragment extends Fragment implements View.OnClickListener {
 
                             }else {
                                 Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                viewPager.removeViewAt(viewPager.getCurrentItem());
+//                                profiles.remove(viewPager.getCurrentItem());
+                                adapter_profile.notifyDataSetChanged();
+
                             }
                         }
                     }
 
                     @Override
                     public void onFailure(Call<SimpleResponse> call, Throwable t) {
-
+                        MyProgress.cancelProgress();
+                        if (t instanceof SocketTimeoutException){
+                            Toast.makeText(getActivity(), R.string.timeout , Toast.LENGTH_SHORT).show();
+                        }else if (t instanceof IOException) {
+                            Toast.makeText(getActivity(), R.string.no_internet_connection , Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(getActivity(), R.string.connection_problem , Toast.LENGTH_SHORT).show();
+                            Log.e(TAG,t.getMessage());
+                        }
                     }
                 });
             }

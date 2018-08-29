@@ -41,7 +41,7 @@ public class Adapter_Profile extends PagerAdapter {
         FrameLayout frameLayout = (FrameLayout)view.findViewById(R.id.frame_profile);
         TextView tv_delete=(TextView)view.findViewById(R.id.tv_delete_profile);
         ImageView iv_pic =(ImageView)view.findViewById(R.id.iv_profile);
-        Glide.with(context).load(Config.CHANEL_PIC_BASE_OFFILNE+profiles.get(position).getPhoto()).into(iv_pic);
+        Glide.with(context).load(Config.CHANEL_PIC_BASE_ONLLINE_FINAL+profiles.get(position).getPhoto()).into(iv_pic);
         frameLayout.setBackgroundColor(ContextCompat.getColor(context,android.R.color.black));
         container.addView(view);
         return view;

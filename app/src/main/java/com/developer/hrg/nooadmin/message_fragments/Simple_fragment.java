@@ -152,6 +152,7 @@ public class Simple_fragment extends Fragment implements View.OnClickListener {
                                  Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                              } catch (JSONException e) {
                                  e.printStackTrace();
+                                 Toast.makeText(getActivity(), R.string.badResponseException, Toast.LENGTH_SHORT).show();
                              } catch (IOException e) {
                                  e.printStackTrace();
                              }
@@ -160,9 +161,14 @@ public class Simple_fragment extends Fragment implements View.OnClickListener {
                              boolean error = response.body().isError();
                              String message = response.body().getMessage();
                              if (!error) {
-                                 MyProgress.cancelProgress();
-                                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                                 getFragmentManager().popBackStack();
+                                 if (!Config.isAppIsInBackground(getActivity())) {
+                                     MyProgress.cancelProgress();
+                                     Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                     getFragmentManager().popBackStack();
+                                 }else {
+                                     Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                 }
+
                              }else {
                                  MyProgress.cancelProgress();
                                  Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();

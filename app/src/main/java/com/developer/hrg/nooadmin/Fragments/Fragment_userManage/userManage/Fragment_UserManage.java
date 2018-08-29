@@ -80,7 +80,6 @@ RecyclerView recyclerView ;
         super.onActivityCreated(savedInstanceState);
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
-
         getView().setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {

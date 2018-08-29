@@ -65,6 +65,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
 
@@ -97,9 +98,12 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
     ProgressBar progressBar;
     //vase inke
     boolean is_compressing = false ;
+  //vase inke babinim aya video compress shode ya na
+  boolean okeye = true ;
+   boolean uploading  = false ;
+    Call<SimpleResponse> callVideo ;
 
-      boolean okeye = true ;
-
+    private static final String TAG = FileFragment.class.getName();
     public VideoFragment() {
         // Required empty public constructor
     }
@@ -156,6 +160,12 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
         super.onResume();
         ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+    public void cancelUpload(){
+        callVideo.cancel();
+        tv_send.setText("ارسال");
+        uploading=false;
+        tv_percent.setText("0%");
+    }
 
     @Override
     public void onClick(View view) {
@@ -169,6 +179,11 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
             }
 
         }else if (view==tv_send) {
+            if (uploading) {
+                cancelUpload();
+
+            }
+
             String message = et_message.getText().toString();
             if(is_compressing) {
 
@@ -177,10 +192,8 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
                else if (videoFile==null) {
                 MySnack.showSnack(coordinatorLayout,"لطفا ابتدا یک ویدیو انتخاب نمایید");
             }
-
-            else if (!InternetCheck.isOnline(getActivity())) {
-                MySnack.showSnack(coordinatorLayout,"عدم دسترسی به اینترنت .. لطفا وضعیت اینترنت خود را برسی نمایید");
-            }else {
+             else
+                  {
                 final JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("type",type);
@@ -197,29 +210,28 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
                 MultipartBody.Part thumb_part = MultipartBody.Part.createFormData("thumb",compressed_thumb.getName(),requestBody);
 
                 ApiInterface api = Client.getClient().create(ApiInterface.class);
-                Call<SimpleResponse> call = api.makeVideoMessage(admin.getApikey(),Integer.valueOf(chanel.getChanel_id()) ,req_content,
+                 callVideo = api.makeVideoMessage(admin.getApikey(),Integer.valueOf(chanel.getChanel_id()) ,req_content,
                         video_part,thumb_part
                         );
 
-                call.enqueue(new Callback<SimpleResponse>() {
+                      uploading=true;
+                      tv_send.setText("لغو ارسال");
+                callVideo.enqueue(new Callback<SimpleResponse>() {
                     @Override
                     public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                         if (!response.isSuccessful()) {
                             try {
-//                                  Log.e("toerror" , "injast");
-//                                  Log.e("toerror",response.raw().message());
-//                                Log.e("toerror",response.errorBody().string());
+
 
                                 JSONObject jsonobjectt = new JSONObject(response.errorBody().string());
-
-                                //     Log.e("toerror",jsonObject.toString());
-
                                 String message = jsonobjectt.getString("message");
                                 MySnack.showSnack(coordinatorLayout,message);
+                                cancelUpload();
 
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                Toast.makeText(getActivity(), R.string.badResponseException, Toast.LENGTH_SHORT).show();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -230,10 +242,17 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
                             String message = response.body().getMessage();
                             if (!error) {
 
-                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                                getFragmentManager().popBackStack();
+                                if (!Config.isAppIsInBackground(getActivity())) {
+                                    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                    getFragmentManager().popBackStack();
+                                }else {
+                                    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                    tv_percent.setText(0+" %");
+                                    videoFile=null;
+                                    tv_send.setText("ارسال");
+                                }
                             }else {
-
+                                cancelUpload();
                                 Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -241,10 +260,18 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
 
                     @Override
                     public void onFailure(Call<SimpleResponse> call, Throwable t) {
-                        Log.e("tomoshkel" , "moshkelDare");
+                        if (t instanceof SocketTimeoutException){
+                            Toast.makeText(getActivity(), R.string.timeout , Toast.LENGTH_SHORT).show();
+                        }else if (t instanceof IOException) {
+                            Toast.makeText(getActivity(), R.string.no_internet_connection , Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(getActivity(), R.string.connection_problem , Toast.LENGTH_SHORT).show();
+                            Log.e(TAG,t.getMessage());
+                        }
 
-                        //  Toast.makeText(getActivity(), t.getMessage().toString(), Toast.LENGTH_SHORT).show();
-                        MyAlert.showAlert(getActivity(),"خطا"," خطای "+ "\n" + t.toString() + "\n"+ "لطفا دوباره تلاش کنید");
+                        cancelUpload();
+
+
 
                     }
                 });
@@ -313,9 +340,10 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
           //  final String    realPath=getPath(selectedVideo);
             final String    realPath= RealPathUtil.getPath(getActivity(),selectedVideo);
            File file = new File(realPath);
-            Log.e("TestVideoFile",file.getAbsolutePath());
+
 
             if (file.length()/(1024*1024) <= 20) {
+
                 videoFile=file;
                 try {
                     MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -340,9 +368,12 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
 
 
 
+
+
             }else {
                 new VideoCompressor(realPath).execute();
             }
+
 
 
         if (okeye) {
@@ -357,6 +388,8 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
     }
 
     private  void bitmapToFile(Bitmap bitmap) {
+        Log.e("bitmapNulle ", bitmap==null ? "nulle" : "null nist");
+
         File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
                 + "/noor/Files/Compressed/videos/thumb"
         );
@@ -380,8 +413,9 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
         } catch (Exception e) {
 
         }finally {
+
             compressed_path_thumb = imageCompression.compressImage(imageFile.getAbsolutePath());
-         compressed_thumb=new File(compressed_path_thumb);
+            compressed_thumb=new File(compressed_path_thumb);
 
         }
     }
@@ -406,27 +440,14 @@ public class VideoFragment extends Fragment implements View.OnClickListener,Prog
     }
 
 
-//    public String getPath(Uri uri) {
-//        String[] projection = { MediaStore.Video.Media.DATA };
-//
-//        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
-//        if (cursor != null) {
-//            // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
-//            // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
-//            int column_index = cursor
-//                    .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-//            cursor.moveToFirst();
-//            return cursor.getString(column_index);
-//
-//        } else
-//            return null;
-//    }
+
 
 
 
     @Override
     public void onProgressUpdate(int percentage) {
-        tv_percent.setText(percentage+"");
+        tv_percent.setText(percentage+" %");
+
     }
 
     @Override

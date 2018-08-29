@@ -120,7 +120,6 @@ public class Fragment_makeChanel extends Fragment implements View.OnClickListene
             }
 
         }else if (view==tv_sabt) {
-
             String name = et_name.getText().toString();
             String desc = et_desc.getText().toString();
             if (name.length()==0) {
@@ -212,7 +211,6 @@ public class Fragment_makeChanel extends Fragment implements View.OnClickListene
 
             }
         }
-
 
     }
 

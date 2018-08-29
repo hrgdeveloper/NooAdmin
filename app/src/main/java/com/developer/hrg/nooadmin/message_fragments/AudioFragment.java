@@ -33,6 +33,7 @@ import com.developer.hrg.nooadmin.Fragments.Fragment_userManage.makeChanel.Fragm
 import com.developer.hrg.nooadmin.Helper.AdminInfo;
 import com.developer.hrg.nooadmin.Helper.ApiInterface;
 import com.developer.hrg.nooadmin.Helper.Client;
+import com.developer.hrg.nooadmin.Helper.Config;
 import com.developer.hrg.nooadmin.Helper.ImageCompression;
 import com.developer.hrg.nooadmin.Helper.InternetCheck;
 import com.developer.hrg.nooadmin.Helper.MyAlert;
@@ -133,7 +134,7 @@ public class AudioFragment extends Fragment implements View.OnClickListener,Prog
     public void onResume() {
         super.onResume();
         ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((MainActivity)getActivity()).setToolbarText("تست میکنییییم");
+
     }
 
     @Override
@@ -153,9 +154,8 @@ public class AudioFragment extends Fragment implements View.OnClickListener,Prog
                 String message = et_text.getText().toString();
                 if (audiFile == null) {
                     MySnack.showSnack(coordinatorLayout, "لطفا ابتدا یک ویدیو انتخاب نمایید");
-                } else if (!InternetCheck.isOnline(getActivity())) {
-                    MySnack.showSnack(coordinatorLayout, "عدم دسترسی به اینترنت .. لطفا وضعیت اینترنت خود را برسی نمایید");
                 } else {
+
                     final JSONObject jsonObject = new JSONObject();
                     try {
                         jsonObject.put("type", type);
@@ -189,6 +189,7 @@ public class AudioFragment extends Fragment implements View.OnClickListener,Prog
                                     cancelUpload();
 
                                 } catch (JSONException e) {
+                                    Toast.makeText(getActivity(), R.string.badResponseException, Toast.LENGTH_SHORT).show();
                                     e.printStackTrace();
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -199,9 +200,17 @@ public class AudioFragment extends Fragment implements View.OnClickListener,Prog
                                 boolean error = response.body().isError();
                                 String message = response.body().getMessage();
                                 if (!error) {
+                                    if (!Config.isAppIsInBackground(getActivity())) {
+                                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                        getFragmentManager().popBackStack();
+                                    }else {
+                                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                        tv_percent.setText(0+" %");
+                                        audiFile=null;
+                                        tv_send.setText("ارسال");
+                                    }
 
-                                    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                                    getFragmentManager().popBackStack();
+
                                 } else {
                                    cancelUpload();
                                     Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
@@ -211,7 +220,6 @@ public class AudioFragment extends Fragment implements View.OnClickListener,Prog
 
                         @Override
                         public void onFailure(Call<SimpleResponse> call, Throwable t) {
-                            Log.e("tomoshkel", "moshkelDare");
                             if (t instanceof SocketTimeoutException){
                                 Toast.makeText(getActivity(), R.string.timeout , Toast.LENGTH_SHORT).show();
                             }else if (t instanceof IOException) {
@@ -334,7 +342,7 @@ public class AudioFragment extends Fragment implements View.OnClickListener,Prog
 
     @Override
     public void onProgressUpdate(int percentage) {
-        tv_percent.setText(percentage+"");
+        tv_percent.setText(percentage+" %");
 
     }
 

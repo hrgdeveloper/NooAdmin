@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:paddingBottom="@dimen/_10sdp"
+    android:layout_height="wrap_content">
+<EditText
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="نام کانال"
+    android:layout_marginTop="@dimen/_10sdp"
+    android:layout_marginLeft="@dimen/_5sdp"
+    android:layout_marginRight="@dimen/_5sdp"
+    android:id="@+id/et_chanel_name_update"
+    />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="توضیحات کانال"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_5sdp"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:id="@+id/et_chanel_des_update"
+         android:minLines="4"
+        android:gravity="right"
+
+        ></EditText>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="به روز رسانی"
+        android:textColor="@android:color/white"
+        android:background="@drawable/btn_one"
+        android:id="@+id/btn_update_chanel"
+        android:maxWidth="@dimen/_40sdp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/_10sdp"
+        />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="لغو"
+            android:max="@dimen/_40sdp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_two"
+            android:id="@+id/btn_cancel_update"
+            android:layout_toLeftOf="@+id/btn_update_chanel"
+            android:layout_marginRight="@dimen/_10sdp"
+            />
+    </RelativeLayout>
+</LinearLayout>
+</ScrollView>

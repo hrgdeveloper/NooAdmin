@@ -168,7 +168,7 @@ public class FileFragment extends Fragment implements View.OnClickListener,Progr
             }else {
                 String message = et_text.getText().toString();
                 if (file == null) {
-                    MySnack.showSnack(coordinatorLayout, "لطفا ابتدا یک ویدیو انتخاب نمایید");
+                    MySnack.showSnack(coordinatorLayout, "لطفا ابتدا یک فایل انتخاب نمایید");
 
                 } else {
                     final JSONObject jsonObject = new JSONObject();
@@ -207,6 +207,7 @@ public class FileFragment extends Fragment implements View.OnClickListener,Progr
                                     MySnack.showSnack(coordinatorLayout, message);
                                     cancelUpload();
                                 } catch (JSONException e) {
+                                    Toast.makeText(getActivity(), R.string.badResponseException, Toast.LENGTH_SHORT).show();
                                     e.printStackTrace();
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -217,9 +218,17 @@ public class FileFragment extends Fragment implements View.OnClickListener,Progr
                                 boolean error = response.body().isError();
                                 String message = response.body().getMessage();
                                 if (!error) {
+                                    if (!Config.isAppIsInBackground(getActivity())) {
+                                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                        getFragmentManager().popBackStack();
+                                    }else {
+                                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                        tv_percent.setText(0+" %");
+                                        file=null;
+                                        tv_send.setText("ارسال");
+                                    }
 
-                                    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                                    getFragmentManager().popBackStack();
+
                                 } else {
                                     cancelUpload();
                                     Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
@@ -337,7 +346,8 @@ public class FileFragment extends Fragment implements View.OnClickListener,Progr
 
     @Override
     public void onProgressUpdate(int percentage) {
-        tv_percent.setText(percentage+"");
+        tv_percent.setText(percentage+" %");
+
 
     }
 

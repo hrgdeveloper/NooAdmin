@@ -44,6 +44,10 @@ public interface ApiInterface {
     @POST("makeChanel")
     Call<SimpleResponse> mChanel(@Header("AuthorizationMyAd") String header ,@Part MultipartBody.Part pic , @Part("details")RequestBody details);
 
+    @FormUrlEncoded
+    @PUT("updateChanel/{chanel_id}")
+    Call<SimpleResponse> updateChanel(@Header("AuthorizationMyAd") String header , @Path("chanel_id") int chanel_id , @Field("name") String name , @Field("des") String des);
+
     @Multipart
     @POST("notify")
     Call<SimpleResponse> notify(@Header("AuthorizationMyAd") String header ,@Part MultipartBody.Part pic , @Part("details")RequestBody details);
@@ -59,7 +63,7 @@ public interface ApiInterface {
 
 
     @FormUrlEncoded
-    @HTTP(method = "DELETE", path = Config.OFFLINE_URL + "deleteChanelPhoto/{photo_id}", hasBody = true)
+    @HTTP(method = "DELETE", path = Config.ONLINE_URL_FINAL + "deleteChanelPhoto/{photo_id}", hasBody = true)
     Call<SimpleResponse> deleteChanelPhoto (@Header("AuthorizationMyAd") String header ,@Path("photo_id") int photo_id,@Field("photo_name") String photo_name);
 
 

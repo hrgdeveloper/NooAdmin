@@ -10,4 +10,5 @@
     <string name="l_make_chanel_name">نام کانال</string>
     <string name="timeout">عدم ارتباط با سرور</string>
     <string name="connection_problem">خطا در ارتباط با سرور</string>
+    <string name="badResponseException">خطا در دریافت پاسخ از سرور دوباره تلاش کنید</string>
 </resources>

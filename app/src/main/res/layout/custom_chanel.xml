@@ -54,8 +54,8 @@
         android:text="2018:22:12 12:42"
         android:id="@+id/tv_custom_chanel_date"
         android:layout_marginLeft="@dimen/_5sdp"
-        android:layout_below="@+id/tv_custom_chanel_last"
-        android:layout_alignStart="@+id/tv_custom_chanel_admin" />
+       android:layout_above="@+id/viewLine"
+        android:layout_toStartOf="@+id/tv_custom_chanel_cm_count_unread" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -97,7 +97,8 @@
        android:background="@android:color/black"
        android:layout_marginLeft="@dimen/_15sdp"
        android:layout_marginTop="@dimen/_4sdp"
-       android:layout_below="@+id/tv_custom_chanel_date"
+       android:id="@+id/viewLine"
+       android:layout_below="@+id/iv_custom_chanel_photo"
      />
 
 </RelativeLayout>
