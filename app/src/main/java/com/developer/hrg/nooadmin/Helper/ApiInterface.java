@@ -63,7 +63,7 @@ public interface ApiInterface {
 
 
     @FormUrlEncoded
-    @HTTP(method = "DELETE", path = Config.ONLINE_URL_FINAL + "deleteChanelPhoto/{photo_id}", hasBody = true)
+    @HTTP(method = "DELETE", path = Config.OFFLINE_URL + "deleteChanelPhoto/{photo_id}", hasBody = true)
     Call<SimpleResponse> deleteChanelPhoto (@Header("AuthorizationMyAd") String header ,@Path("photo_id") int photo_id,@Field("photo_name") String photo_name);
 
 

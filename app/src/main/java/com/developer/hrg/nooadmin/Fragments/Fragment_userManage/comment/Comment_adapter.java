@@ -58,7 +58,7 @@ public class Comment_adapter extends RecyclerView.Adapter<Comment_adapter.Holder
         holder.tv_time.setText(comment.getCreated_at());
         holder.tv_text.setText(comment.getText());
         holder.tv_username.setText(comment.getUsername());
-        Glide.with(context).load(Config.PROFILE_PIC_THUMB_ADDRESS_ONLINE_FINAL+comment.getPic_thumb()).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL)
+        Glide.with(context).load(Config.PROFILE_PIC_THUMB_ADDRESS+comment.getPic_thumb()).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL)
         .placeholder(R.drawable.profile).error(R.drawable.profile)
         ).into(holder.iv_pic);
 

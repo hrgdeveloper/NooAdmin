@@ -25,7 +25,7 @@ public class Client {
                     .readTimeout(1, TimeUnit.MINUTES)
                     .build();
             retrofit=new Retrofit.Builder()
-                    .baseUrl(Config.ONLINE_URL_FINAL)
+                    .baseUrl(Config.OFFLINE_URL)
                     .client(okHttpClient)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create(gson))

@@ -66,7 +66,7 @@ public class GetChanelsAdapter extends RecyclerView.Adapter<GetChanelsAdapter.Ho
         }else {
             holder.tv_last.setText(chanel.getLast_message());
         }
-        Glide.with(context).load(Config.CHANEL_THUMB_BASE_ONLLINE_FINAL+chanel.getThumb()).into(holder.iv_profile);
+        Glide.with(context).load(Config.CHANEL_THUMB_BASE_OFFILNE+chanel.getThumb()).into(holder.iv_profile);
 
 
     }

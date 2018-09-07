@@ -12,8 +12,7 @@ import java.util.List;
  */
 
 public class Config {
-    public static final String OFFLINE_URL = "http://192.168.1.147/noor/v1/";
-
+    public static final  String OFFLINE_URL = "http://192.168.1.147/noor/v1/";
     public static final  String ONLINE_URL = "http://keepwords.ir/noor/v1/";
     public static final  String ONLINE_URL_FINAL = "http://nooresalehin.ir/v1/";
 

@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rt_manageChanels.setOnClickListener(this);
         rt_notify.setOnClickListener(this);
         rt_newAdmin.setOnClickListener(this);
+
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
@@ -83,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else if (view==rt_newAdmin) {
             openFragment(new NewAdminFragment(),"newAdmin",false);
         }
-
     }
 
 
